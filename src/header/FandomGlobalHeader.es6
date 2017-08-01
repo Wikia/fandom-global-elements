@@ -74,14 +74,22 @@ export default class FandomGlobalHeader extends HTMLElement {
         this._updateUserData(userData);
         this._bindSearchActions();
 
-        fetch(`${this.atts.mwBase}/api/v1/design-system/fandoms/2/${this.atts.langCode}/global-navigation`, { credentials: 'same-origin' })
-            .then(response => response.json())
+        this._fetchNavInfo()
             .then((json) => {
                 this._updateNavLinks(json);
                 if (!userData) {
                     this._updateUserData(fromNavResponse(json));
                 }
             });
+    }
+
+    refreshUserData() {
+        this._fetchNavInfo().then(json => this._updateUserData(fromNavResponse(json)));
+    }
+
+    _fetchNavInfo() {
+        return fetch(`${this.atts.mwBase}/api/v1/design-system/fandoms/2/${this.atts.langCode}/global-navigation`, { credentials: 'same-origin' })
+            .then(response => response.json());
     }
 
     _draw() {
