@@ -1,4 +1,4 @@
-IMAGE_NAME = 'fandom-header-footer'
+IMAGE_NAME = 'fandom-global-elements'
 
 def get_local_ip()
   network_ip = `ifconfig en0 | grep inet | grep -v inet6 | awk '{print $2}'`
