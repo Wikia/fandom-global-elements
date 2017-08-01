@@ -2597,13 +2597,27 @@ var FandomGlobalHeader = function (_HTMLElement) {
             this._updateUserData(userData);
             this._bindSearchActions();
 
-            fetch(this.atts.mwBase + '/api/v1/design-system/fandoms/2/' + this.atts.langCode + '/global-navigation', { credentials: 'same-origin' }).then(function (response) {
-                return response.json();
-            }).then(function (json) {
+            this._fetchNavInfo().then(function (json) {
                 _this2._updateNavLinks(json);
                 if (!userData) {
                     _this2._updateUserData((0, _userData.fromNavResponse)(json));
                 }
+            });
+        }
+    }, {
+        key: 'refreshUserData',
+        value: function refreshUserData() {
+            var _this3 = this;
+
+            this._fetchNavInfo().then(function (json) {
+                return _this3._updateUserData((0, _userData.fromNavResponse)(json));
+            });
+        }
+    }, {
+        key: '_fetchNavInfo',
+        value: function _fetchNavInfo() {
+            return fetch(this.atts.mwBase + '/api/v1/design-system/fandoms/2/' + this.atts.langCode + '/global-navigation', { credentials: 'same-origin' }).then(function (response) {
+                return response.json();
             });
         }
     }, {
@@ -2626,7 +2640,7 @@ var FandomGlobalHeader = function (_HTMLElement) {
     }, {
         key: '_buildHeadroomOptions',
         value: function _buildHeadroomOptions() {
-            var _this3 = this;
+            var _this4 = this;
 
             var headerHeight = this.rootElement.querySelector('.wds-global-navigation').offsetHeight;
             this.rootElement.querySelector('.wds-global-navigation__wrapper').style.height = headerHeight + 'px';
@@ -2634,36 +2648,36 @@ var FandomGlobalHeader = function (_HTMLElement) {
             return Object.assign({}, HEADROOM_OPTIONS, {
                 offset: headerHeight,
                 onUnpin: function onUnpin() {
-                    var activeSearch = _this3.rootElement.querySelector('.' + CSS_CLASSES.SEARCH_ACTIVE);
+                    var activeSearch = _this4.rootElement.querySelector('.' + CSS_CLASSES.SEARCH_ACTIVE);
                     if (activeSearch) {
-                        var classes = _this3.rootElement.querySelector(headroomElementSelector).classList;
+                        var classes = _this4.rootElement.querySelector(headroomElementSelector).classList;
                         classes.add(CSS_CLASSES.HEADROOM_PINNED);
                         classes.remove(CSS_CLASSES.HEADROOM_UNPINNED);
                     } else {
-                        _this3.dispatchEvent(new CustomEvent(EVENTS.UNPIN_HEADROOM));
+                        _this4.dispatchEvent(new CustomEvent(EVENTS.UNPIN_HEADROOM));
                     }
                 },
                 onPin: function onPin() {
-                    _this3.dispatchEvent(new CustomEvent(EVENTS.PIN_HEADROOM));
+                    _this4.dispatchEvent(new CustomEvent(EVENTS.PIN_HEADROOM));
                 }
             });
         }
     }, {
         key: '_bindAnonActions',
         value: function _bindAnonActions() {
-            var _this4 = this;
+            var _this5 = this;
 
             this.rootElement.querySelector('.wds-global-navigation__account-menu .anon-sign-in').addEventListener('click', function () {
-                _this4.dispatchEvent(new CustomEvent(EVENTS.CLICK_SIGN_IN));
+                _this5.dispatchEvent(new CustomEvent(EVENTS.CLICK_SIGN_IN));
             });
             this.rootElement.querySelector('.wds-global-navigation__account-menu .anon-register').addEventListener('click', function () {
-                _this4.dispatchEvent(new CustomEvent(EVENTS.CLICK_REGISTER));
+                _this5.dispatchEvent(new CustomEvent(EVENTS.CLICK_REGISTER));
             });
         }
     }, {
         key: '_bindUserActions',
         value: function _bindUserActions() {
-            var _this5 = this;
+            var _this6 = this;
 
             this._updateLink('.wds-global-navigation__user-menu .profile-link', null, EVENTS.CLICK_VIEW_PROFILE);
             this._updateLink('.wds-global-navigation__user-menu .author-link', null, EVENTS.CLICK_AUTHOR_PROFILE);
@@ -2672,13 +2686,13 @@ var FandomGlobalHeader = function (_HTMLElement) {
             this._updateLink('.wds-global-navigation__user-menu .help-link', null, EVENTS.CLICK_HELP);
             this.rootElement.querySelector('.wds-global-navigation__user-menu #global-navigation-user-sign-out form').addEventListener('submit', function (e) {
                 e.preventDefault();
-                _this5.dispatchEvent(new CustomEvent(EVENTS.SUBMIT_LOGOUT));
+                _this6.dispatchEvent(new CustomEvent(EVENTS.SUBMIT_LOGOUT));
             });
         }
     }, {
         key: '_bindSearchActions',
         value: function _bindSearchActions() {
-            var _this6 = this;
+            var _this7 = this;
 
             var container = this.rootElement.querySelector('.wds-global-navigation');
             var searchForm = this.rootElement.querySelector('.wds-global-navigation__search');
@@ -2692,7 +2706,7 @@ var FandomGlobalHeader = function (_HTMLElement) {
 
             searchForm.addEventListener('submit', function (e) {
                 e.preventDefault();
-                _this6.dispatchEvent(new CustomEvent(EVENTS.SUBMIT_SEARCH, { detail: { query: input.value } }));
+                _this7.dispatchEvent(new CustomEvent(EVENTS.SUBMIT_SEARCH, { detail: { query: input.value } }));
             });
 
             input.addEventListener('focus', function () {
@@ -2741,7 +2755,7 @@ var FandomGlobalHeader = function (_HTMLElement) {
     }, {
         key: '_updateLink',
         value: function _updateLink(selector, href, eventName) {
-            var _this7 = this;
+            var _this8 = this;
 
             var component = this.rootElement.querySelector(selector);
             if (component) {
@@ -2750,7 +2764,7 @@ var FandomGlobalHeader = function (_HTMLElement) {
                 }
 
                 component.addEventListener('click', function (e) {
-                    _this7.dispatchEvent(new CustomEvent(eventName, { detail: { href: href, originalEvent: e } }));
+                    _this8.dispatchEvent(new CustomEvent(eventName, { detail: { href: href, originalEvent: e } }));
                 });
             }
         }

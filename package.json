@@ -1,6 +1,6 @@
 {
-  "name": "fandom-global-header",
-  "version": "1.0.0",
+  "name": "fandom-global-elements",
+  "version": "1.0.1",
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
