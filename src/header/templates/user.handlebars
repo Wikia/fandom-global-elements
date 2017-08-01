@@ -1,0 +1,34 @@
+<div class="wds-global-navigation__user-menu wds-dropdown">
+  <div title="{{user.name}}" class="wds-global-navigation__dropdown-toggle wds-dropdown__toggle">
+    <img class="wds-avatar" src="{{user.avatar}}" alt="{{user.name}}">
+    <svg class="wds-icon wds-icon-tiny wds-dropdown__toggle-chevron">
+      <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#wds-icons-dropdown-tiny"></use>
+    </svg>
+  </div>
+  <div class="wds-global-navigation__dropdown-content wds-is-right-aligned wds-dropdown__content">
+    <ul class="wds-is-linked wds-list">
+      <li>
+        <a class="wds-global-navigation__dropdown-link profile-link">{{strings.global-navigation-user-view-profile}}</a>
+      </li>
+      <li>
+        <a class="wds-global-navigation__dropdown-link author-link">{{strings.global-navigation-user-view-author-profile}}</a>
+      </li>
+      <li>
+        <a class="wds-global-navigation__dropdown-link mytalk-link">{{strings.global-navigation-user-my-talk}}</a>
+      </li>
+      <li>
+        <a class="wds-global-navigation__dropdown-link preferences-link">{{strings.global-navigation-user-my-preferences}}</a>
+      </li>
+      <li>
+        <a class="wds-global-navigation__dropdown-link help-link">{{strings.global-navigation-user-help}}</a>
+      </li>
+      <li>
+        <div class="wds-global-navigation__dropdown-link" id="global-navigation-user-sign-out">
+          <form method="POST">
+            <button type="submit" class="wds-sign-out__button">{{strings.global-navigation-user-sign-out}}</button>
+          </form>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

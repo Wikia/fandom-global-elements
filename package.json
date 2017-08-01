@@ -1,0 +1,43 @@
+{
+  "name": "fandom-global-header",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-loader": "^7.1.1",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-es2015": "^6.24.1",
+    "css-loader": "^0.28.4",
+    "fs-extra": "^4.0.1",
+    "glob": "^7.1.2",
+    "handlebars-loader": "^1.5.0",
+    "jsdom": "^11.1.0",
+    "node-sass": "^4.5.3",
+    "nodemon": "^1.11.0",
+    "npm-run-all": "^4.0.2",
+    "purify-css": "^1.2.5",
+    "raw-loader": "^0.5.1",
+    "sass-loader": "^6.0.6",
+    "webpack": "3.4.0"
+  },
+  "dependencies": {
+    "design-system": "github:wikia/design-system#8.3.0",
+    "design-system-i18n": "github:wikia/design-system-i18n#0.11.0",
+    "handlebars": "^4.0.10",
+    "headroom.js": "^0.9.4",
+    "whatwg-fetch": "^2.0.3"
+  },
+  "scripts": {
+    "dev": "yarn build:dev",
+    "release": "yarn build:release",
+    "build:release": "NODE_ENV=production webpack --colors --config ./build/webpack.config.js",
+    "build:dev": "NODE_ENV=development webpack --colors --watch --config ./build/webpack.config.js",
+    "build:styles": "node build/styles.es6",
+    "build:styles:watch": "nodemon --ext scss,css --watch src --ignore \"src/**/generated-styles.css\" --exec \"yarn build:styles\"",
+    "build:svgs": "node build/svgs.es6",
+    "build:svgs:watch": "nodemon --ext handlebars --watch src --exec \"yarn build:svgs\""
+  }
+}
