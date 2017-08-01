@@ -8,7 +8,7 @@ export default class AttributeHelper {
         this.el = el;
     }
 
-    getAttribute = (attribute, defaultValue) => this.el.hasAttribute(attribute) ? this.el.getAttribute(attribute) : defaultValue;
+    getAttribute = (attribute, defaultValue) => (this.el.hasAttribute(attribute) ? this.el.getAttribute(attribute) : defaultValue);
     getAsBool = (attribute, defaultValue = false) => this.getAttribute(attribute, defaultValue.toString()).toLowerCase() === 'true';
     getAsJson = (attribute, defaultValue = null) => {
         if (!this.el.hasAttribute(attribute)) {
