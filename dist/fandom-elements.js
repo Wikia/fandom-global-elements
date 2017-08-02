@@ -2634,8 +2634,7 @@ var FandomGlobalHeader = function (_HTMLElement) {
     }, {
         key: '_fetchNavInfo',
         value: function _fetchNavInfo() {
-            // return fetch(`${this.atts.mwBase}/api/v1/design-system/fandoms/2/${this.atts.langCode}/global-navigation`, { credentials: 'same-origin' })
-            return fetch(this.atts.mwBase + '/api/v1/design-system/wikis/831/en/global-navigation', { credentials: 'same-origin' }).then(function (response) {
+            return fetch(this.atts.mwBase + '/api/v1/design-system/fandoms/2/' + this.atts.langCode + '/global-navigation', { credentials: 'same-origin' }).then(function (response) {
                 return response.json();
             });
         }
