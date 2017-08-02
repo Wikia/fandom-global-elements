@@ -3,6 +3,8 @@ import Headroom from 'headroom.js';
 import headerTemplate from './templates/header.handlebars';
 import anonUserMenu from './templates/anon.handlebars';
 import userMenu from './templates/user.handlebars';
+import userLink from './templates/userLink.handlebars';
+import userMenuLogout from './templates/userMenuLogout.handlebars';
 import AttributeHelper from '../AttributeHelper.es6';
 import getStrings from '../getStrings.es6';
 import { fromNavResponse, validateUserData } from './userData.es6';
@@ -39,19 +41,14 @@ const HEADROOM_OPTIONS = {
 };
 
 export const EVENTS = {
-    CLICK_AUTHOR_PROFILE: 'click-author-profile',
     CLICK_CREATE_WIKI: 'click-create-wiki',
-    CLICK_HELP: 'click-help',
     CLICK_LOGO: 'click-logo',
     CLICK_REGISTER: 'click-register',
     CLICK_SIGN_IN: 'click-sign-in',
     CLICK_VERTICAL_GAMES: 'click-vertical-games',
     CLICK_VERTICAL_MOVIES: 'click-vertical-movies',
     CLICK_VERTICAL_TV: 'click-vertical-tv',
-    CLICK_VIEW_PROFILE: 'click-view-profile',
     CLICK_MESSAGE_WALL: 'click-message-wall',
-    CLICK_MY_PREFERENCES: 'click-my-preferences',
-    CLICK_MY_TALK: 'click-mytalk',
     CLICK_WIKIS_CENTRAL: 'click-wikis-central',
     CLICK_WIKIS_EXPLORE: 'click-wikis-explore',
     CLICK_WIKIS_UNIVERSITY: 'click-wikis-university',
@@ -77,8 +74,12 @@ export default class FandomGlobalHeader extends HTMLElement {
         this._fetchNavInfo()
             .then((json) => {
                 this._updateNavLinks(json);
+                const userLinks = json.user && json.user.links;
+
                 if (!userData) {
-                    this._updateUserData(fromNavResponse(json));
+                    this._updateUserData(fromNavResponse(json), userLinks);
+                } else if (userLinks) {
+                    this._bindUserActions(userLinks);
                 }
             });
     }
@@ -88,7 +89,8 @@ export default class FandomGlobalHeader extends HTMLElement {
     }
 
     _fetchNavInfo() {
-        return fetch(`${this.atts.mwBase}/api/v1/design-system/fandoms/2/${this.atts.langCode}/global-navigation`, { credentials: 'same-origin' })
+        // return fetch(`${this.atts.mwBase}/api/v1/design-system/fandoms/2/${this.atts.langCode}/global-navigation`, { credentials: 'same-origin' })
+        return fetch(this.atts.mwBase+'/api/v1/design-system/wikis/831/en/global-navigation', { credentials: 'same-origin' })
             .then(response => response.json());
     }
 
@@ -139,14 +141,34 @@ export default class FandomGlobalHeader extends HTMLElement {
         });
     }
 
-    _bindUserActions() {
-        this._updateLink('.wds-global-navigation__user-menu .profile-link', null, EVENTS.CLICK_VIEW_PROFILE);
-        this._updateLink('.wds-global-navigation__user-menu .author-link', null, EVENTS.CLICK_AUTHOR_PROFILE);
-        this._updateLink('.wds-global-navigation__user-menu .mytalk-link', null, EVENTS.CLICK_MY_TALK);
-        this._updateLink('.wds-global-navigation__user-menu .preferences-link', null, EVENTS.CLICK_MY_PREFERENCES);
-        this._updateLink('.wds-global-navigation__user-menu .help-link', null, EVENTS.CLICK_HELP);
+    _bindUserActions(enabledLinks) {
+        const children = [];
+
+        for (const link of enabledLinks) {
+            if (link.tracking_label === 'account.sign-out') {
+                continue;
+            }
+
+            children.push(userLink({
+                'link-target': link.href,
+                'link-action': link.tracking_label,
+                'link-text': this.strings[link.title.key]
+            }));
+        }
+
+        children.push(userMenuLogout({
+            'button-text': this.strings['global-navigation-user-sign-out']
+        }));
+
+        const menu = this.rootElement.querySelector('.wds-global-navigation__user-menu .wds-global-navigation__dropdown-content .wds-list');
+        menu.innerHTML = children.join('');
+
+        for (const link of Array.from(menu.querySelectorAll('a'))) {
+            this._updateLink(link, link.getAttribute('href'), `click-user-${link.getAttribute('data-action')}`);
+        }
+
         this.rootElement
-            .querySelector('.wds-global-navigation__user-menu #global-navigation-user-sign-out form')
+            .querySelector('.wds-global-navigation__user-menu .global-navigation-user-sign-out form')
             .addEventListener('submit', (e) => {
                 e.preventDefault();
                 this.dispatchEvent(new CustomEvent(EVENTS.SUBMIT_LOGOUT));
@@ -180,7 +202,7 @@ export default class FandomGlobalHeader extends HTMLElement {
         });
     }
 
-    _updateUserData(userData = null) {
+    _updateUserData(userData = null, enabledLinks = {}) {
         const menu = this.rootElement.querySelector('.user-menu');
         const startWiki = this.rootElement.querySelector('.wds-global-navigation__start-a-wiki');
 
@@ -194,7 +216,7 @@ export default class FandomGlobalHeader extends HTMLElement {
 
         menu.innerHTML = userMenu({ strings: this.strings, user: userData });
         startWiki.classList.add(CSS_CLASSES.USER_LOGGED_IN);
-        this._bindUserActions();
+        this._bindUserActions(enabledLinks);
         this.headroom.init();
     }
 
@@ -209,8 +231,11 @@ export default class FandomGlobalHeader extends HTMLElement {
         this._updateLink('.wds-global-navigation__wikis-menu .wds-dropdown__content a.university-link', json.wikis.links[2].href, EVENTS.CLICK_WIKIS_UNIVERSITY);
     }
 
-    _updateLink(selector, href, eventName) {
-        const component = this.rootElement.querySelector(selector);
+    _updateLink(selectorOrComponent, href, eventName) {
+        const component = typeof selectorOrComponent === 'string' ?
+            this.rootElement.querySelector(selectorOrComponent) :
+            selectorOrComponent;
+
         if (component) {
             if (href) {
                 component.setAttribute('href', href);
