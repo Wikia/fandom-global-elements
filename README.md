@@ -94,8 +94,15 @@ The footer component implements the design system footer.
 `<fandom-global-footer>` accepts the following attributes:
 - `lang-code` - the current language code used by the parent page. defaults to `en`
 - `city-id` - the wiki city id
+- `community-name` - the name of the community
+- `vertical` - the vertical the community resides in (NOT an i18n string)
 - `mw-base` - base MediaWiki URL used to http requests. defaults to `http://www.wikia.com`
 
+
+Note: For the FC communities that are not connected to a MW we are using the
+community.wikia.com city id (177) then plugging in the community-name as the name.
+This leaves a potential gap with vertical but it should be a short term solution while
+we workout the decoupling of the FC from MW.
 
 ### TODO
 

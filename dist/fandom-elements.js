@@ -2206,6 +2206,7 @@ var defaultMwBase = 'http://www.wikia.com';
 var defaultServicesBase = 'https://services.wikia.com';
 var defaultLangCode = 'en';
 var defaultCityId = 177;
+var defaultVertical = 'Entertainment';
 
 var AttributeHelper = function () {
     function AttributeHelper(el) {
@@ -2258,6 +2259,16 @@ var AttributeHelper = function () {
         key: 'cityId',
         get: function get() {
             return this.getAttribute('city-id', defaultCityId);
+        }
+    }, {
+        key: 'communityName',
+        get: function get() {
+            return this.getAttribute('community-name', null);
+        }
+    }, {
+        key: 'vertical',
+        get: function get() {
+            return this.getAttribute('vertical', defaultVertical);
         }
     }]);
 
@@ -3616,6 +3627,8 @@ var FandomGlobalFooter = function (_HTMLElement) {
                 return response.json();
             }).then(function (footer) {
                 return _this2._draw(footer);
+            }).catch(function (error) {
+                return console.log('error fetching footer ', error);
             });
         }
     }, {
@@ -3628,7 +3641,9 @@ var FandomGlobalFooter = function (_HTMLElement) {
         value: function _draw(footer) {
             var content = (0, _footer2.default)({
                 i18n: this.strings,
-                model: footer
+                model: footer,
+                communityName: this.atts.communityName,
+                vertical: this.atts.vertical
             });
 
             var template = (0, _getOrCreateTemplate2.default)('fandomGlobalFooter', this._getCSS() + _sprite2.default + content);
@@ -3750,7 +3765,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "<div class=\"wds-global-footer__bottom-bar\">\n    <div class=\"wds-global-footer__bottom-bar-row wds-has-padding\">\n        "
-    + ((stack1 = __default(__webpack_require__(41)).call(alias1,((stack1 = ((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.licensing_and_vertical : stack1)) != null ? stack1.description : stack1),{"name":"license","hash":{},"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(41)).call(alias1,((stack1 = ((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.licensing_and_vertical : stack1)) != null ? stack1.description : stack1),(depth0 != null ? depth0.communityName : depth0),(depth0 != null ? depth0.vertical : depth0),{"name":"license","hash":{},"data":data})) != null ? stack1 : "")
     + "\n    </div>\n    <div class=\"wds-global-footer__bottom-bar-row wds-has-border-top global-footer-full-site-link-wrapper\">\n        <a id=\"global-footer-full-site-link\" href=\"?useskin=oasis\" rel=\"nofollow\" class=\"wds-global-footer__button-link\" data-tracking-label=\"full-site-link\">\n            "
     + container.escapeExpression(__default(__webpack_require__(2)).call(alias1,"global-footer-full-site-link",{"name":"i18n","hash":{"ns":"design-system"},"data":data}))
     + "\n        </a>\n    </div>\n</div>";
@@ -3775,13 +3790,23 @@ function licenseLink(model) {
     return "<a href=\"" + escapeHtml(model.params.license.href) + "\" data-tracking-label=\"" + escapeHtml(model.params.license.tracking_label) + "\">\n        " + escapeHtml(model.params.license.title.value) + "\n    </a>";
 }
 
-function license(model) {
-    return this.i18n[model.key].replace('__sitename__', escapeHtml(model.params.sitename.value)).replace('__vertical__', escapeHtml(this.i18n[model.params.vertical.key])).replace('__license__', licenseLink(model));
-}
+/**
+ * Generates the license string at the very bottom of the footer. This string is important in that
+ * it contains information used by comscore to place the community.
+ *
+ * The communityName and vertical allow for overrides. This is required for the FC since not all
+ * FC communities are tied to MM communities. The API provides the name and vertical for MW communities.
+ *
+ * @param model
+ * @param communityName override (optional)
+ * @param vertical override (optional)
+ */
+function license(model, communityName, vertical) {
+    var siteName = escapeHtml(communityName === null ? model.params.sitename.value : communityName);
+    var verticalName = escapeHtml(vertical === null ? this.i18n[model.params.vertical.key] : vertical);
 
-// {{license model.licensing_and_vertical.description.key
-// model.licensing_and_vertical.description.params.sitename.value
-// model.licensing_and_vertical.description.params.vertical.key}}
+    return this.i18n[model.key].replace('__sitename__', siteName).replace('__vertical__', verticalName).replace('__license__', licenseLink(model));
+}
 
 /***/ }),
 /* 42 */

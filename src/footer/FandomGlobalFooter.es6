@@ -17,7 +17,8 @@ export default class FandomGlobalFooter extends HTMLElement {
 
         fetch(`${this.atts.mwBase}/api/v1/design-system/wikis/${this.atts.cityId}/${this.atts.langCode}/global-footer`)
             .then((response) => response.json())
-            .then((footer) => this._draw(footer));
+            .then((footer) => this._draw(footer))
+            .catch((error) => console.log('error fetching footer ', error));
     }
 
     _getCSS() {
@@ -27,7 +28,9 @@ export default class FandomGlobalFooter extends HTMLElement {
     _draw(footer) {
         const content = footerTemplate({
             i18n: this.strings,
-            model: footer
+            model: footer,
+            communityName: this.atts.communityName,
+            vertical: this.atts.vertical
         });
 
         const template = getOrCreateTemplate('fandomGlobalFooter', this._getCSS() + svg + content);

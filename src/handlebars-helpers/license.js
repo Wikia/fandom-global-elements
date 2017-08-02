@@ -13,14 +13,22 @@ function licenseLink(model) {
     </a>`;
 }
 
-export default function license(model) {
-    return this.i18n[model.key].replace('__sitename__', escapeHtml(model.params.sitename.value))
-        .replace('__vertical__', escapeHtml(this.i18n[model.params.vertical.key]))
+/**
+ * Generates the license string at the very bottom of the footer. This string is important in that
+ * it contains information used by comscore to place the community.
+ *
+ * The communityName and vertical allow for overrides. This is required for the FC since not all
+ * FC communities are tied to MM communities. The API provides the name and vertical for MW communities.
+ *
+ * @param model
+ * @param communityName override (optional)
+ * @param vertical override (optional)
+ */
+export default function license(model, communityName, vertical) {
+    const siteName = escapeHtml(communityName === null ? model.params.sitename.value : communityName);
+    const verticalName = escapeHtml(vertical === null ? this.i18n[model.params.vertical.key] : vertical);
+
+    return this.i18n[model.key].replace('__sitename__', siteName)
+        .replace('__vertical__', verticalName)
         .replace('__license__', licenseLink(model));
 }
-
-// {{license model.licensing_and_vertical.description.key
-// model.licensing_and_vertical.description.params.sitename.value
-// model.licensing_and_vertical.description.params.vertical.key}}
-
-
