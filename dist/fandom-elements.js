@@ -2205,7 +2205,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var defaultMwBase = 'http://www.wikia.com';
 var defaultServicesBase = 'https://services.wikia.com';
 var defaultLangCode = 'en';
-var defaultCityId = 0;
+var defaultCityId = 177;
 
 var AttributeHelper = function () {
     function AttributeHelper(el) {
