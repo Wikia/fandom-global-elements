@@ -89,8 +89,7 @@ export default class FandomGlobalHeader extends HTMLElement {
     }
 
     _fetchNavInfo() {
-        // return fetch(`${this.atts.mwBase}/api/v1/design-system/fandoms/2/${this.atts.langCode}/global-navigation`, { credentials: 'same-origin' })
-        return fetch(this.atts.mwBase+'/api/v1/design-system/wikis/831/en/global-navigation', { credentials: 'same-origin' })
+        return fetch(`${this.atts.mwBase}/api/v1/design-system/fandoms/2/${this.atts.langCode}/global-navigation`, { credentials: 'same-origin' })
             .then(response => response.json());
     }
 
