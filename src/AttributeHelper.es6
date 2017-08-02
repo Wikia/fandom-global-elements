@@ -1,7 +1,7 @@
 const defaultMwBase = 'http://www.wikia.com';
 const defaultServicesBase = 'https://services.wikia.com';
 const defaultLangCode = 'en';
-const defaultCityId = 0;
+const defaultCityId = 177;
 
 export default class AttributeHelper {
     constructor(el) {
