@@ -88,8 +88,12 @@ export default class FandomGlobalHeader extends HTMLElement {
         this._fetchNavInfo().then(json => this._updateUserData(fromNavResponse(json)));
     }
 
+    isVisible() {
+        return !this.rootElement.querySelector(headroomElementSelector).classList.contains(CSS_CLASSES.HEADROOM_UNPINNED);
+    }
+
     _fetchNavInfo() {
-        return fetch(`${this.atts.mwBase}/api/v1/design-system/fandoms/2/${this.atts.langCode}/global-navigation`, { credentials: 'same-origin' })
+        return fetch(`${this.atts.mwBase}/api/v1/design-system/fandoms/2/${this.atts.langCode}/global-navigation`, { credentials: 'include' })
             .then(response => response.json());
     }
 

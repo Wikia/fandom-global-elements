@@ -1,6 +1,6 @@
 {
   "name": "fandom-global-elements",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "main": "dist/fandom-elements.js",
   "license": "MIT",
   "devDependencies": {
@@ -32,7 +32,7 @@
   },
   "scripts": {
     "dev": "yarn build:dev",
-    "release": "yarn build:release",
+    "release": "yarn build:release && yarn version",
     "build:release": "NODE_ENV=production webpack --colors --config ./build/webpack.config.js",
     "build:dev": "NODE_ENV=development webpack --colors --watch --config ./build/webpack.config.js",
     "build:styles": "node build/styles.es6",

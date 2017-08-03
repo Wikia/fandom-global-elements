@@ -2632,9 +2632,14 @@ var FandomGlobalHeader = function (_HTMLElement) {
             });
         }
     }, {
+        key: 'isVisible',
+        value: function isVisible() {
+            return !this.rootElement.querySelector(headroomElementSelector).classList.contains(CSS_CLASSES.HEADROOM_UNPINNED);
+        }
+    }, {
         key: '_fetchNavInfo',
         value: function _fetchNavInfo() {
-            return fetch(this.atts.mwBase + '/api/v1/design-system/fandoms/2/' + this.atts.langCode + '/global-navigation', { credentials: 'same-origin' }).then(function (response) {
+            return fetch(this.atts.mwBase + '/api/v1/design-system/fandoms/2/' + this.atts.langCode + '/global-navigation', { credentials: 'include' }).then(function (response) {
                 return response.json();
             });
         }
@@ -3622,7 +3627,7 @@ var FandomGlobalFooter = function (_HTMLElement) {
             this.atts = new _AttributeHelper2.default(this);
             this.strings = (0, _getStrings2.default)(this.atts.langCode);
 
-            fetch(this.atts.mwBase + '/api/v1/design-system/wikis/' + this.atts.cityId + '/' + this.atts.langCode + '/global-footer').then(function (response) {
+            fetch(this.atts.mwBase + '/api/v1/design-system/wikis/' + this.atts.cityId + '/' + this.atts.langCode + '/global-footer', { credentials: 'include' }).then(function (response) {
                 return response.json();
             }).then(function (footer) {
                 return _this2._draw(footer);
