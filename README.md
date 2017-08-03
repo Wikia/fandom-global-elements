@@ -33,6 +33,12 @@ To run the dev environment:
 
 This will transpile the components using webpack. You should now be able to navigate to http://local.wikia-dev.us:8082 and view the components in an actual webpage.
 
+Note that there may be some configuration necessary on the server you are using for the design system. If the
+domain you are making request from using the component is not the same as the MW API then the browser will
+reject your request. The server needs to include `Access-Control-Allow-Origin: http://yourdomain:yourport/` and
+`Access-Control-Allow-Credentials: true` in the response headers. If you are using a dev box this can be enabled by
+adding `$wgCORSAllowOrigin = [ 'http://yourdomain:yourport' ];` to your `DevBoxSettings.php`.
+
 #### Building for Release
 To make a release build, run:
 ```
