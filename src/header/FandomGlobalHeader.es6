@@ -201,7 +201,7 @@ export default class FandomGlobalHeader extends HTMLElement {
         });
     }
 
-    _updateUserData(userData = null, enabledLinks = {}) {
+    _updateUserData(userData = null, enabledLinks = []) {
         const menu = this.rootElement.querySelector('.user-menu');
         const startWiki = this.rootElement.querySelector('.wds-global-navigation__start-a-wiki');
 

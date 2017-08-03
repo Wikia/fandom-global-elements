@@ -2803,7 +2803,7 @@ var FandomGlobalHeader = function (_HTMLElement) {
         key: '_updateUserData',
         value: function _updateUserData() {
             var userData = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-            var enabledLinks = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+            var enabledLinks = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
 
             var menu = this.rootElement.querySelector('.user-menu');
             var startWiki = this.rootElement.querySelector('.wds-global-navigation__start-a-wiki');
