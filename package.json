@@ -31,13 +31,14 @@
     "whatwg-fetch": "^2.0.3"
   },
   "scripts": {
-    "dev": "yarn build:dev",
-    "release": "yarn build:release && yarn version",
+    "dev": "yarn build:svg-dictionary && yarn build:dev",
+    "release": "yarn build:svg-dictionary && yarn build:release && yarn version",
     "build:release": "NODE_ENV=production webpack --colors --config ./build/webpack.config.js",
     "build:dev": "NODE_ENV=development webpack --colors --watch --config ./build/webpack.config.js",
     "build:styles": "node build/styles.es6",
     "build:styles:watch": "nodemon --ext scss,css --watch src --ignore \"src/**/generated-styles.css\" --exec \"yarn build:styles\"",
     "build:svgs": "node build/svgs.es6",
-    "build:svgs:watch": "nodemon --ext handlebars --watch src --exec \"yarn build:svgs\""
+    "build:svgs:watch": "nodemon --ext handlebars --watch src --exec \"yarn build:svgs\"",
+    "build:svg-dictionary": "node build/svgDictionary.es6"
   }
 }
