@@ -33,7 +33,7 @@
   },
   "scripts": {
     "dev": "yarn build:svg-dictionary && yarn build:dev",
-    "release": "yarn build:svg-dictionary && yarn build:release && yarn version",
+    "release": "yarn build:svg-dictionary && yarn build:release",
     "build:release": "NODE_ENV=production webpack --colors --config ./build/webpack.config.js",
     "build:dev": "NODE_ENV=development webpack --colors --watch --config ./build/webpack.config.js",
     "build:styles": "node build/styles.es6",

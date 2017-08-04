@@ -2298,6 +2298,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var idCounter = 0;
+
+var generateDefId = function generateDefId() {
+    return 'fandom-global-elements-def-' + ++idCounter;
+};
+
 var getSvgId = function getSvgId(elem) {
     if (!elem.hasAttribute('xlink:href')) {
         return null;
@@ -2310,6 +2316,125 @@ var getSvgId = function getSvgId(elem) {
 
     return href.split('#')[1];
 };
+
+// this is kinda crappy, but FF needs the ids to be unique within the entire dom since it doesn't truly support shadow dom
+// once it does, we can probably remove this entire function. the triple for loop isn't too bad since only a few
+// elements use defs
+var updateDefs = function updateDefs(svg) {
+    var defs = svg.querySelector('defs');
+
+    if (!defs) {
+        return;
+    }
+
+    var map = {};
+
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+        for (var _iterator = defs.childNodes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var def = _step.value;
+
+            var originalId = def.getAttribute('id');
+            var newId = generateDefId();
+            def.setAttribute('id', newId);
+            map[originalId] = newId;
+        }
+    } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+            }
+        } finally {
+            if (_didIteratorError) {
+                throw _iteratorError;
+            }
+        }
+    }
+
+    var checkAttributes = ['clip-path', 'fill'];
+
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
+
+    try {
+        for (var _iterator2 = Array.from(svg.querySelectorAll(checkAttributes.map(function (att) {
+            return '*[' + att + '^=url]';
+        }).join(',')))[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var child = _step2.value;
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
+
+            try {
+                for (var _iterator3 = checkAttributes[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                    var att = _step3.value;
+
+                    if (child.hasAttribute(att)) {
+                        var _iteratorNormalCompletion4 = true;
+                        var _didIteratorError4 = false;
+                        var _iteratorError4 = undefined;
+
+                        try {
+                            for (var _iterator4 = Object.keys(map)[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                                var _originalId = _step4.value;
+
+                                child.setAttribute(att, child.getAttribute(att).replace(_originalId, map[_originalId]));
+                            }
+                        } catch (err) {
+                            _didIteratorError4 = true;
+                            _iteratorError4 = err;
+                        } finally {
+                            try {
+                                if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                                    _iterator4.return();
+                                }
+                            } finally {
+                                if (_didIteratorError4) {
+                                    throw _iteratorError4;
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (err) {
+                _didIteratorError3 = true;
+                _iteratorError3 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                        _iterator3.return();
+                    }
+                } finally {
+                    if (_didIteratorError3) {
+                        throw _iteratorError3;
+                    }
+                }
+            }
+        }
+    } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
+            }
+        } finally {
+            if (_didIteratorError2) {
+                throw _iteratorError2;
+            }
+        }
+    }
+};
+
+// this is needed because in Safari the svg symbol lookup does not work when in a shadow dom
 
 var SvgHelper = function () {
     function SvgHelper(rootElement) {
@@ -2330,13 +2455,13 @@ var SvgHelper = function () {
     }, {
         key: 'overwrite',
         value: function overwrite() {
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
+            var _iteratorNormalCompletion5 = true;
+            var _didIteratorError5 = false;
+            var _iteratorError5 = undefined;
 
             try {
-                for (var _iterator = Array.from(this.rootElement.querySelectorAll('svg use'))[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    var use = _step.value;
+                for (var _iterator5 = Array.from(this.rootElement.querySelectorAll('svg use'))[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                    var use = _step5.value;
 
                     var existingSvg = use.parentNode;
                     var svgId = getSvgId(use);
@@ -2349,21 +2474,22 @@ var SvgHelper = function () {
                             existingSvg.classList.forEach(function (c) {
                                 return newSvg.classList.add(c);
                             });
+                            updateDefs(newSvg);
                             existingSvg.parentNode.replaceChild(newSvg, existingSvg);
                         })();
                     }
                 }
             } catch (err) {
-                _didIteratorError = true;
-                _iteratorError = err;
+                _didIteratorError5 = true;
+                _iteratorError5 = err;
             } finally {
                 try {
-                    if (!_iteratorNormalCompletion && _iterator.return) {
-                        _iterator.return();
+                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                        _iterator5.return();
                     }
                 } finally {
-                    if (_didIteratorError) {
-                        throw _iteratorError;
+                    if (_didIteratorError5) {
+                        throw _iteratorError5;
                     }
                 }
             }
@@ -3442,7 +3568,7 @@ function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj);
 module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=container.lambda, alias2=container.escapeExpression;
 
-  return "<div class=\"wds-global-navigation__wrapper\">\n  <header class=\"wds-global-navigation\">\n    <div class=\"wds-global-navigation__content-bar\">\n      <a class=\"wds-global-navigation__logo\" href=\"http://fandom.wikia.com\">\n        <svg class=\"wds-global-navigation__logo-image wds-is-wds-company-logo-fandom\">\n          <use xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"#wds-company-logo-fandom\"></use>\n        </svg>\n        <svg class=\"wds-global-navigation__logo-image wds-is-wds-company-logo-powered-by-wikia\">\n          <use xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"#wds-company-logo-powered-by-wikia\"></use>\n        </svg>\n      </a>\n      <div class=\"wds-global-navigation__links-and-search\">\n        <a class=\"wds-global-navigation__link wds-is-games\">"
+  return "<div class=\"wds-global-navigation__wrapper\">\n  <header class=\"wds-global-navigation\">\n    <div class=\"wds-global-navigation__content-bar\">\n      <a class=\"wds-global-navigation__logo\" href=\"http://fandom.wikia.com\">\n        <svg class=\"wds-global-navigation__logo-image wds-is-wds-company-logo-fandom\">\n          <use xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"#wds-company-logo-fandom\"></use>\n        </svg>\n        <svg class=\"wds-global-navigation__logo-image wds-is-wds-company-logo-powered-by-wikia\">\n          <use xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"#wds-company-logo-powered-by-wikia\"></use>\n        </svg>\n        <svg>\n          <use xlink:href=\"#wds-company-logo-wikia-org\"></use>\n        </svg>\n      </a>\n      <div class=\"wds-global-navigation__links-and-search\">\n        <a class=\"wds-global-navigation__link wds-is-games\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.strings : depth0)) != null ? stack1["global-navigation-fandom-overview-link-vertical-games"] : stack1), depth0))
     + "</a>\n        <a class=\"wds-global-navigation__link wds-is-movies\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.strings : depth0)) != null ? stack1["global-navigation-fandom-overview-link-vertical-movies"] : stack1), depth0))
