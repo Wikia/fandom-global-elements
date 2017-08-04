@@ -13,6 +13,7 @@ const getSvgId = (elem) => {
     return href.split('#')[1];
 };
 
+// this is needed because in Safari the svg symbol lookup does not work when in a shadow dom
 export default class SvgHelper {
     constructor(rootElement) {
         this.rootElement = rootElement;
