@@ -30,10 +30,11 @@ export default class SvgHelper {
         for (const use of Array.from(this.rootElement.querySelectorAll('svg use'))) {
             const existingSvg = use.parentNode;
             const svgId = getSvgId(use);
-            const newSvgContainer = this.rootElement.querySelector(`.svg-dictionary div.${svgId}`);
+            const dictionarySvg = this.rootElement.querySelector(`.svg-dictionary svg.${svgId}`);
 
-            if (newSvgContainer) {
-                const newSvg = newSvgContainer.querySelector('svg').cloneNode(true);
+            if (dictionarySvg) {
+                const newSvg = dictionarySvg.cloneNode(true);
+                newSvg.classList.remove(svgId);
                 existingSvg.classList.forEach(c => newSvg.classList.add(c));
                 existingSvg.parentNode.replaceChild(newSvg, existingSvg);
             }

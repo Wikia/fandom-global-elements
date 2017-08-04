@@ -1,6 +1,6 @@
 {
   "name": "fandom-global-elements",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "main": "dist/fandom-elements.js",
   "license": "MIT",
   "devDependencies": {
@@ -21,7 +21,8 @@
     "purify-css": "^1.2.5",
     "raw-loader": "^0.5.1",
     "sass-loader": "^6.0.6",
-    "webpack": "3.4.0"
+    "webpack": "3.4.0",
+    "xml2js": "^0.4.17"
   },
   "dependencies": {
     "design-system": "github:wikia/design-system#8.3.0",
