@@ -5,11 +5,11 @@ import anonUserMenu from './templates/anon.handlebars';
 import userMenu from './templates/user.handlebars';
 import userLink from './templates/userLink.handlebars';
 import userMenuLogout from './templates/userMenuLogout.handlebars';
-import AttributeHelper from '../AttributeHelper.es6';
+import AttributeHelper from '../helpers/AttributeHelper.es6';
+import SvgHelper from '../helpers/svg/SvgHelper.es6';
 import getStrings from '../getStrings.es6';
 import { fromNavResponse, validateUserData } from './userData.es6';
 import getOrCreateTemplate from '../getOrCreateTemplate.es6';
-import svg from 'design-system/dist/svg/sprite.svg';
 import designSystemStyle from 'design-system/dist/css/styles.css';
 import style from './style.scss';
 
@@ -62,6 +62,7 @@ export default class FandomGlobalHeader extends HTMLElement {
     connectedCallback() {
         this.rootElement = this.attachShadow({ mode: 'open' });
         this.atts = new AttributeHelper(this);
+        this.svgs = new SvgHelper(this.rootElement);
         this.strings = getStrings(this.atts.langCode);
         this.headroom = null;
 
@@ -106,11 +107,13 @@ export default class FandomGlobalHeader extends HTMLElement {
         });
 
         const css = `<style>${designSystemStyle.toString()} ${style.toString()}</style>`;
-        const template = getOrCreateTemplate('fandomGlobalHeader', css + svg + content);
+        const template = getOrCreateTemplate('fandomGlobalHeader', css + content);
 
         ShadyCSS.prepareTemplate(template, 'fandom-global-header');
         ShadyCSS.styleElement(this);
         this.rootElement.appendChild(document.importNode(template.content, true));
+        this.svgs.addSvgs();
+        this.svgs.overwrite();
     }
 
     _buildHeadroomOptions() {
@@ -214,13 +217,14 @@ export default class FandomGlobalHeader extends HTMLElement {
             startWiki.classList.remove(CSS_CLASSES.USER_LOGGED_IN);
             this._bindAnonActions();
             this.headroom.destroy();
-            return;
+        } else {
+            menu.innerHTML = userMenu({ strings: this.strings, user: userData });
+            startWiki.classList.add(CSS_CLASSES.USER_LOGGED_IN);
+            this._bindUserActions(enabledLinks);
+            this.headroom.init();
         }
 
-        menu.innerHTML = userMenu({ strings: this.strings, user: userData });
-        startWiki.classList.add(CSS_CLASSES.USER_LOGGED_IN);
-        this._bindUserActions(enabledLinks);
-        this.headroom.init();
+        this.svgs.overwrite();
     }
 
     _updateNavLinks(json) {

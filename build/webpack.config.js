@@ -41,7 +41,7 @@ module.exports = {
                     loader: __dirname + '/../node_modules/handlebars-loader/index.js',
                     options: {
                         runtime: __dirname + '/../node_modules/handlebars/dist/handlebars.runtime.js',
-                        helperDirs: [`${__dirname}/../src/handlebars-helpers`]
+                        helperDirs: [`${__dirname}/../src/helpers/handlebars`]
                     }
                 }]
             },
@@ -64,6 +64,12 @@ module.exports = {
             },
             {
                 test: /\.svg$/,
+                use: [{
+                    loader: 'raw-loader'
+                }]
+            },
+            {
+                test: /\.html/,
                 use: [{
                     loader: 'raw-loader'
                 }]
