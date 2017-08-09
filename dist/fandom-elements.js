@@ -4052,7 +4052,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, ".wds-global-footer {\n  font-family: sans-serif; }\n", ""]);
+exports.push([module.i, ".wds-global-footer {\n  font-family: sans-serif;\n  margin-top: 0; }\n", ""]);
 
 // exports
 
