@@ -1,6 +1,6 @@
 {
   "name": "fandom-global-elements",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "main": "dist/fandom-elements.js",
   "license": "MIT",
   "devDependencies": {
