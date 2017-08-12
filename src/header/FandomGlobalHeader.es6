@@ -163,25 +163,25 @@ export default class FandomGlobalHeader extends HTMLElement {
                     classes.add(CSS_CLASSES.HEADROOM_PINNED);
                     classes.remove(CSS_CLASSES.HEADROOM_UNPINNED);
                 } else {
-                    this.dispatchEvent(new CustomEvent(EVENTS.UNPIN_HEADROOM))
+                    this._dispatchEvent(EVENTS.UNPIN_HEADROOM);
                 }
             },
             onPin: () => {
-                this.dispatchEvent(new CustomEvent(EVENTS.PIN_HEADROOM))
+                this._dispatchEvent(EVENTS.PIN_HEADROOM);
             }
         })
     }
 
     _bindAnonActions() {
         this.rootElement.querySelector('.wds-global-navigation__account-menu .anon-sign-in').addEventListener('click', () => {
-            this.dispatchEvent(new CustomEvent(EVENTS.CLICK_SIGN_IN));
+            this._dispatchEvent(EVENTS.CLICK_SIGN_IN);
             this.popup.open(`${this.atts.mwBase}/signin`, {
                 modal: 1,
                 redirect: window.location.href
             });
         });
         this.rootElement.querySelector('.wds-global-navigation__account-menu .anon-register').addEventListener('click', () => {
-            this.dispatchEvent(new CustomEvent(EVENTS.CLICK_REGISTER));
+            this._dispatchEvent(EVENTS.CLICK_REGISTER);
         });
     }
 
@@ -215,7 +215,7 @@ export default class FandomGlobalHeader extends HTMLElement {
             .querySelector('.wds-global-navigation__user-menu .global-navigation-user-sign-out form')
             .addEventListener('submit', (e) => {
                 e.preventDefault();
-                this.dispatchEvent(new CustomEvent(EVENTS.SUBMIT_LOGOUT));
+                this._dispatchEvent(EVENTS.SUBMIT_LOGOUT);
             })
     }
 
@@ -232,7 +232,7 @@ export default class FandomGlobalHeader extends HTMLElement {
 
         searchForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            this.dispatchEvent(new CustomEvent(EVENTS.SUBMIT_SEARCH, { detail: { query: input.value } }));
+            this._dispatchEvent(EVENTS.SUBMIT_SEARCH, { query: input.value });
         });
 
         input.addEventListener('focus', () => {
@@ -287,7 +287,7 @@ export default class FandomGlobalHeader extends HTMLElement {
             }
 
             component.addEventListener('click', (e) => {
-                this.dispatchEvent(new CustomEvent(eventName, { detail: { href, originalEvent: e } }));
+                this._dispatchEvent(eventName, { href, originalEvent: e});
             })
         }
     }
