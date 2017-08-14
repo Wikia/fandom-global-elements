@@ -166,8 +166,13 @@ export default class FandomGlobalHeader extends HTMLElement {
                 redirect: window.location.href
             });
         });
+
         this.rootElement.querySelector('.wds-global-navigation__account-menu .anon-register').addEventListener('click', () => {
             this._dispatchEvent(EVENTS.CLICK_REGISTER);
+            this.popup.open(`${this.atts.mwBase}/register`, {
+                modal: 1,
+                redirect: window.location.href
+            });
         });
     }
 
@@ -282,12 +287,12 @@ export default class FandomGlobalHeader extends HTMLElement {
 
     _onMessage(event) {
         // this is kinda janky, but we have to try and guess what the message type is based on its data
-        if (event.data && event.data.isUserAuthorized === true) { // login event
-            this._onLoginSuccess();
+        if (event.data && event.data.isUserAuthorized === true) { // login/register event
+            this._onAuthSuccess();
         }
     }
 
-    _onLoginSuccess() {
+    _onAuthSuccess() {
         this._dispatchEvent(EVENTS.AUTH_SUCCESS);
         this.refreshUserData();
         this.popup.close();
