@@ -2803,6 +2803,7 @@ var EVENTS = exports.EVENTS = {
     CLICK_WIKIS_CENTRAL: 'click-wikis-central',
     CLICK_WIKIS_EXPLORE: 'click-wikis-explore',
     CLICK_WIKIS_UNIVERSITY: 'click-wikis-university',
+    LOGOUT_SUCCESS: 'logout-success',
     PIN_HEADROOM: 'pin-headroom',
     SUBMIT_LOGOUT: 'submit-logout',
     SUBMIT_SEARCH: 'submit-search',
@@ -2889,9 +2890,12 @@ var FandomGlobalHeader = function (_HTMLElement) {
     }, {
         key: '_doLogout',
         value: function _doLogout() {
-            return _fetch(this.atts.mwBase + '/logout?redirect=' + window.location.href, { method: 'POST' }).catch(function () {
-                return Promise.resolve(null);
-            }); // even if the fetch fails the cookie might still have been cleared, so treat as success
+            var _this4 = this;
+
+            return _fetch(this.atts.mwBase + '/logout', { method: 'POST', mode: 'no-cors' }).then(function () {
+                _this4._dispatchEvent(EVENTS.LOGOUT_SUCCESS);
+                _this4.refreshUserData();
+            });
         }
     }, {
         key: '_draw',
@@ -2915,7 +2919,7 @@ var FandomGlobalHeader = function (_HTMLElement) {
     }, {
         key: '_buildHeadroomOptions',
         value: function _buildHeadroomOptions() {
-            var _this4 = this;
+            var _this5 = this;
 
             var headerHeight = this.rootElement.querySelector('.wds-global-navigation').offsetHeight;
             this.rootElement.querySelector('.wds-global-navigation__wrapper').style.height = headerHeight + 'px';
@@ -2923,36 +2927,36 @@ var FandomGlobalHeader = function (_HTMLElement) {
             return Object.assign({}, HEADROOM_OPTIONS, {
                 offset: headerHeight,
                 onUnpin: function onUnpin() {
-                    var activeSearch = _this4.rootElement.querySelector('.' + CSS_CLASSES.SEARCH_ACTIVE);
+                    var activeSearch = _this5.rootElement.querySelector('.' + CSS_CLASSES.SEARCH_ACTIVE);
                     if (activeSearch) {
-                        var classes = _this4.rootElement.querySelector(headroomElementSelector).classList;
+                        var classes = _this5.rootElement.querySelector(headroomElementSelector).classList;
                         classes.add(CSS_CLASSES.HEADROOM_PINNED);
                         classes.remove(CSS_CLASSES.HEADROOM_UNPINNED);
                     } else {
-                        _this4._dispatchEvent(EVENTS.UNPIN_HEADROOM);
+                        _this5._dispatchEvent(EVENTS.UNPIN_HEADROOM);
                     }
                 },
                 onPin: function onPin() {
-                    _this4._dispatchEvent(EVENTS.PIN_HEADROOM);
+                    _this5._dispatchEvent(EVENTS.PIN_HEADROOM);
                 }
             });
         }
     }, {
         key: '_bindAnonActions',
         value: function _bindAnonActions() {
-            var _this5 = this;
+            var _this6 = this;
 
             this.rootElement.querySelector('.wds-global-navigation__account-menu .anon-sign-in').addEventListener('click', function () {
-                _this5._dispatchEvent(EVENTS.CLICK_SIGN_IN);
-                _this5.popup.open(_this5.atts.mwBase + '/signin', {
+                _this6._dispatchEvent(EVENTS.CLICK_SIGN_IN);
+                _this6.popup.open(_this6.atts.mwBase + '/signin', {
                     modal: 1,
                     redirect: window.location.href
                 });
             });
 
             this.rootElement.querySelector('.wds-global-navigation__account-menu .anon-register').addEventListener('click', function () {
-                _this5._dispatchEvent(EVENTS.CLICK_REGISTER);
-                _this5.popup.open(_this5.atts.mwBase + '/register', {
+                _this6._dispatchEvent(EVENTS.CLICK_REGISTER);
+                _this6.popup.open(_this6.atts.mwBase + '/register', {
                     modal: 1,
                     redirect: window.location.href
                 });
@@ -2961,7 +2965,7 @@ var FandomGlobalHeader = function (_HTMLElement) {
     }, {
         key: '_bindUserActions',
         value: function _bindUserActions(enabledLinks) {
-            var _this6 = this;
+            var _this7 = this;
 
             var children = [];
 
@@ -3032,16 +3036,14 @@ var FandomGlobalHeader = function (_HTMLElement) {
 
             this.rootElement.querySelector('.wds-global-navigation__user-menu .global-navigation-user-sign-out form').addEventListener('submit', function (e) {
                 e.preventDefault();
-                _this6._dispatchEvent(EVENTS.SUBMIT_LOGOUT);
-                _this6._doLogout().then(function () {
-                    return _this6.refreshUserData();
-                });
+                _this7._dispatchEvent(EVENTS.SUBMIT_LOGOUT);
+                _this7._doLogout();
             });
         }
     }, {
         key: '_bindSearchActions',
         value: function _bindSearchActions() {
-            var _this7 = this;
+            var _this8 = this;
 
             var container = this.rootElement.querySelector('.wds-global-navigation');
             var searchForm = this.rootElement.querySelector('.wds-global-navigation__search');
@@ -3055,7 +3057,7 @@ var FandomGlobalHeader = function (_HTMLElement) {
 
             searchForm.addEventListener('submit', function (e) {
                 e.preventDefault();
-                _this7._dispatchEvent(EVENTS.SUBMIT_SEARCH, { query: input.value });
+                _this8._dispatchEvent(EVENTS.SUBMIT_SEARCH, { query: input.value });
             });
 
             input.addEventListener('focus', function () {
@@ -3106,7 +3108,7 @@ var FandomGlobalHeader = function (_HTMLElement) {
     }, {
         key: '_updateLink',
         value: function _updateLink(selectorOrComponent, href, eventName) {
-            var _this8 = this;
+            var _this9 = this;
 
             var component = typeof selectorOrComponent === 'string' ? this.rootElement.querySelector(selectorOrComponent) : selectorOrComponent;
 
@@ -3116,7 +3118,7 @@ var FandomGlobalHeader = function (_HTMLElement) {
                 }
 
                 component.addEventListener('click', function (e) {
-                    _this8._dispatchEvent(eventName, { href: href, originalEvent: e });
+                    _this9._dispatchEvent(eventName, { href: href, originalEvent: e });
                 });
             }
         }
