@@ -2,11 +2,13 @@
 Native web components for the fandom global header and the fandom global footer.
 
 ### Getting Started
-To get started you need [rake](https://github.com/ruby/rake) and [docker](https://www.docker.com/). It's also recommended to have the following entry in your `/etc/hosts` file:
+To get started you need [rake](https://github.com/ruby/rake) and [docker](https://www.docker.com/). It's also recommended to have the following entries in your `/etc/hosts` file:
 
 ```
-127.0.0.1   local.wikia-dev.us
+::1 local.wikia-dev.us
+127.0.0.1 local.wikia-dev.us
 ```
+Note that you need BOTH the ipv6 and ipv4 entries!
 
 That way ajax requests to services and MediaWiki will work properly.
 
@@ -23,7 +25,21 @@ Once that's built use the following to run the dev image:
 > rake dev
 ```
 
+`rake dev` also takes an optional argument indicating the port to be used. If unspecified, it defaults to `80`. ex:
+
+```
+> rake dev[8083]
+```
+
+It's recommended to leave at port 80, though, so that CORS and window-to-window communication will work with authentication.
+
 Once in the image use [yarn](https://yarnpkg.com/lang/en/) commands to add, remove, and run the package scripts.
+
+To install the required packages:
+
+```
+> yarn install
+```
 
 To run the dev environment:
 
@@ -31,7 +47,7 @@ To run the dev environment:
 > yarn dev
 ```
 
-This will transpile the components using webpack. You should now be able to navigate to http://local.wikia-dev.us:8082 and view the components in an actual webpage.
+This will transpile the components using webpack. You should now be able to navigate to http://local.wikia-dev.us and view the components in an actual webpage.
 
 Note that there may be some configuration necessary on the server you are using for the design system. If the
 domain you are making request from using the component is not the same as the MW API then the browser will

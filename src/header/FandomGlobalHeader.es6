@@ -7,6 +7,7 @@ import userLink from './templates/userLink.handlebars';
 import userMenuLogout from './templates/userMenuLogout.handlebars';
 import AttributeHelper from '../helpers/AttributeHelper.es6';
 import SvgHelper from '../helpers/svg/SvgHelper.es6';
+import PopupHelper  from '../helpers/PopupHelper.es6';
 import getStrings from '../getStrings.es6';
 import { fromNavResponse, validateUserData } from './userData.es6';
 import getOrCreateTemplate from '../getOrCreateTemplate.es6';
@@ -41,6 +42,7 @@ const HEADROOM_OPTIONS = {
 };
 
 export const EVENTS = {
+    AUTH_SUCCESS: 'auth-success',
     CLICK_CREATE_WIKI: 'click-create-wiki',
     CLICK_LOGO: 'click-logo',
     CLICK_REGISTER: 'click-register',
@@ -52,17 +54,23 @@ export const EVENTS = {
     CLICK_WIKIS_CENTRAL: 'click-wikis-central',
     CLICK_WIKIS_EXPLORE: 'click-wikis-explore',
     CLICK_WIKIS_UNIVERSITY: 'click-wikis-university',
+    LOGOUT_SUCCESS: 'logout-success',
     PIN_HEADROOM: 'pin-headroom',
     SUBMIT_LOGOUT: 'submit-logout',
     SUBMIT_SEARCH: 'submit-search',
     UNPIN_HEADROOM: 'unpin-headroom'
 };
 
+function _fetch(url, options) {
+    return fetch(url, Object.assign({}, { credentials: 'include' }, options));
+}
+
 export default class FandomGlobalHeader extends HTMLElement {
     connectedCallback() {
         this.rootElement = this.attachShadow({ mode: 'open' });
         this.atts = new AttributeHelper(this);
         this.svgs = new SvgHelper(this.rootElement);
+        this.popup = new PopupHelper((e) => this._onMessage(e));
         this.strings = getStrings(this.atts.langCode);
         this.headroom = null;
 
@@ -85,6 +93,10 @@ export default class FandomGlobalHeader extends HTMLElement {
             });
     }
 
+    disconnectedCallback() {
+        this.popup.close();
+    }
+
     refreshUserData() {
         this._fetchNavInfo().then(json => this._updateUserData(fromNavResponse(json)));
     }
@@ -93,9 +105,21 @@ export default class FandomGlobalHeader extends HTMLElement {
         return !this.rootElement.querySelector(headroomElementSelector).classList.contains(CSS_CLASSES.HEADROOM_UNPINNED);
     }
 
+    _dispatchEvent(name, detail = {}) {
+        this.dispatchEvent(new CustomEvent(name, { detail }));
+    }
+
     _fetchNavInfo() {
-        return fetch(`${this.atts.mwBase}/api/v1/design-system/fandoms/2/${this.atts.langCode}/global-navigation`, { credentials: 'include' })
+        return _fetch(`${this.atts.mwBase}/api/v1/design-system/fandoms/2/${this.atts.langCode}/global-navigation`)
             .then(response => response.json());
+    }
+
+    _doLogout() {
+        return _fetch(`${this.atts.mwBase}/logout`, { method: 'POST', mode: 'no-cors' })
+            .then(() => {
+                this._dispatchEvent(EVENTS.LOGOUT_SUCCESS);
+                this.refreshUserData();
+            });
     }
 
     _draw() {
@@ -129,21 +153,30 @@ export default class FandomGlobalHeader extends HTMLElement {
                     classes.add(CSS_CLASSES.HEADROOM_PINNED);
                     classes.remove(CSS_CLASSES.HEADROOM_UNPINNED);
                 } else {
-                    this.dispatchEvent(new CustomEvent(EVENTS.UNPIN_HEADROOM))
+                    this._dispatchEvent(EVENTS.UNPIN_HEADROOM);
                 }
             },
             onPin: () => {
-                this.dispatchEvent(new CustomEvent(EVENTS.PIN_HEADROOM))
+                this._dispatchEvent(EVENTS.PIN_HEADROOM);
             }
         })
     }
 
     _bindAnonActions() {
         this.rootElement.querySelector('.wds-global-navigation__account-menu .anon-sign-in').addEventListener('click', () => {
-            this.dispatchEvent(new CustomEvent(EVENTS.CLICK_SIGN_IN));
+            this._dispatchEvent(EVENTS.CLICK_SIGN_IN);
+            this.popup.open(`${this.atts.mwBase}/signin`, {
+                modal: 1,
+                redirect: window.location.href
+            });
         });
+
         this.rootElement.querySelector('.wds-global-navigation__account-menu .anon-register').addEventListener('click', () => {
-            this.dispatchEvent(new CustomEvent(EVENTS.CLICK_REGISTER));
+            this._dispatchEvent(EVENTS.CLICK_REGISTER);
+            this.popup.open(`${this.atts.mwBase}/register`, {
+                modal: 1,
+                redirect: window.location.href
+            });
         });
     }
 
@@ -177,7 +210,8 @@ export default class FandomGlobalHeader extends HTMLElement {
             .querySelector('.wds-global-navigation__user-menu .global-navigation-user-sign-out form')
             .addEventListener('submit', (e) => {
                 e.preventDefault();
-                this.dispatchEvent(new CustomEvent(EVENTS.SUBMIT_LOGOUT));
+                this._dispatchEvent(EVENTS.SUBMIT_LOGOUT);
+                this._doLogout();
             })
     }
 
@@ -194,7 +228,7 @@ export default class FandomGlobalHeader extends HTMLElement {
 
         searchForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            this.dispatchEvent(new CustomEvent(EVENTS.SUBMIT_SEARCH, { detail: { query: input.value } }));
+            this._dispatchEvent(EVENTS.SUBMIT_SEARCH, { query: input.value });
         });
 
         input.addEventListener('focus', () => {
@@ -249,8 +283,21 @@ export default class FandomGlobalHeader extends HTMLElement {
             }
 
             component.addEventListener('click', (e) => {
-                this.dispatchEvent(new CustomEvent(eventName, { detail: { href, originalEvent: e } }));
+                this._dispatchEvent(eventName, { href, originalEvent: e});
             })
         }
+    }
+
+    _onMessage(event) {
+        // this is kinda janky, but we have to try and guess what the message type is based on its data
+        if (event.data && event.data.isUserAuthorized === true) { // login/register event
+            this._onAuthSuccess();
+        }
+    }
+
+    _onAuthSuccess() {
+        this._dispatchEvent(EVENTS.AUTH_SUCCESS);
+        this.refreshUserData();
+        this.popup.close();
     }
 }
