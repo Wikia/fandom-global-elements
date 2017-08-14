@@ -60,6 +60,10 @@ export const EVENTS = {
     UNPIN_HEADROOM: 'unpin-headroom'
 };
 
+function _fetch(url, options) {
+    return fetch(url, Object.assign({}, { credentials: 'include' }, options));
+}
+
 export default class FandomGlobalHeader extends HTMLElement {
     connectedCallback() {
         this.rootElement = this.attachShadow({ mode: 'open' });
@@ -104,22 +108,14 @@ export default class FandomGlobalHeader extends HTMLElement {
         this.dispatchEvent(new CustomEvent(name, { detail }));
     }
 
-    _onMessage(event) {
-        // this is kinda janky, but we have to try and guess what the message type is based on its data
-        if (event.data && event.data.isUserAuthorized === true) { // login event
-            this._onLoginSuccess();
-        }
-    }
-
-    _onLoginSuccess() {
-        this._dispatchEvent(EVENTS.AUTH_SUCCESS);
-        this.refreshUserData();
-        this.popup.close();
-    }
-
     _fetchNavInfo() {
-        return fetch(`${this.atts.mwBase}/api/v1/design-system/fandoms/2/${this.atts.langCode}/global-navigation`, { credentials: 'include' })
+        return _fetch(`${this.atts.mwBase}/api/v1/design-system/fandoms/2/${this.atts.langCode}/global-navigation`)
             .then(response => response.json());
+    }
+
+    _doLogout() {
+        return _fetch(`${this.atts.mwBase}/logout?redirect=${window.location.href}`, { method: 'POST' })
+            .catch(() => Promise.resolve(null)); // even if the fetch fails the cookie might still have been cleared, so treat as success
     }
 
     _draw() {
@@ -206,6 +202,8 @@ export default class FandomGlobalHeader extends HTMLElement {
             .addEventListener('submit', (e) => {
                 e.preventDefault();
                 this._dispatchEvent(EVENTS.SUBMIT_LOGOUT);
+                this._doLogout()
+                    .then(() => this.refreshUserData());
             })
     }
 
@@ -280,5 +278,18 @@ export default class FandomGlobalHeader extends HTMLElement {
                 this._dispatchEvent(eventName, { href, originalEvent: e});
             })
         }
+    }
+
+    _onMessage(event) {
+        // this is kinda janky, but we have to try and guess what the message type is based on its data
+        if (event.data && event.data.isUserAuthorized === true) { // login event
+            this._onLoginSuccess();
+        }
+    }
+
+    _onLoginSuccess() {
+        this._dispatchEvent(EVENTS.AUTH_SUCCESS);
+        this.refreshUserData();
+        this.popup.close();
     }
 }
