@@ -35,6 +35,12 @@ It's recommended to leave at port 80, though, so that CORS and window-to-window 
 
 Once in the image use [yarn](https://yarnpkg.com/lang/en/) commands to add, remove, and run the package scripts.
 
+To install the required packages:
+
+```
+> yarn install
+```
+
 To run the dev environment:
 
 ```
