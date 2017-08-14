@@ -65,20 +65,15 @@ export default class FandomGlobalHeader extends HTMLElement {
         this.rootElement = this.attachShadow({ mode: 'open' });
         this.atts = new AttributeHelper(this);
         this.svgs = new SvgHelper(this.rootElement);
-        this.popup = new PopupHelper();
+        this.popup = new PopupHelper((e) => this._onMessage(e));
         this.strings = getStrings(this.atts.langCode);
         this.headroom = null;
-        this.messageListener = (e) => {
-            this._onMessage(e);
-        };
 
         this._draw();
         this.headroom = new Headroom(this.rootElement.querySelector(headroomElementSelector), this._buildHeadroomOptions());
         const userData = validateUserData(this.atts.getAsJson(ATTRIBUTES.USER_DATA));
         this._updateUserData(userData);
         this._bindSearchActions();
-
-        window.addEventListener('message', this.messageListener);
 
         this._fetchNavInfo()
             .then((json) => {
@@ -95,7 +90,6 @@ export default class FandomGlobalHeader extends HTMLElement {
 
     disconnectedCallback() {
         this.popup.close();
-        window.removeEventListener('message', this.messageListener);
     }
 
     refreshUserData() {
@@ -111,10 +105,6 @@ export default class FandomGlobalHeader extends HTMLElement {
     }
 
     _onMessage(event) {
-        if (!this.popup.isEventFromPopup(event)) {
-            return;
-        }
-
         // this is kinda janky, but we have to try and guess what the message type is based on its data
         if (event.data && event.data.isUserAuthorized === true) { // login event
             this._onLoginSuccess();
