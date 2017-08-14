@@ -54,6 +54,7 @@ export const EVENTS = {
     CLICK_WIKIS_CENTRAL: 'click-wikis-central',
     CLICK_WIKIS_EXPLORE: 'click-wikis-explore',
     CLICK_WIKIS_UNIVERSITY: 'click-wikis-university',
+    LOGOUT_SUCCESS: 'logout-success',
     PIN_HEADROOM: 'pin-headroom',
     SUBMIT_LOGOUT: 'submit-logout',
     SUBMIT_SEARCH: 'submit-search',
@@ -114,8 +115,11 @@ export default class FandomGlobalHeader extends HTMLElement {
     }
 
     _doLogout() {
-        return _fetch(`${this.atts.mwBase}/logout?redirect=${window.location.href}`, { method: 'POST' })
-            .catch(() => Promise.resolve(null)); // even if the fetch fails the cookie might still have been cleared, so treat as success
+        return _fetch(`${this.atts.mwBase}/logout`, { method: 'POST', mode: 'no-cors' })
+            .then(() => {
+                this._dispatchEvent(EVENTS.LOGOUT_SUCCESS);
+                this.refreshUserData();
+            });
     }
 
     _draw() {
@@ -207,8 +211,7 @@ export default class FandomGlobalHeader extends HTMLElement {
             .addEventListener('submit', (e) => {
                 e.preventDefault();
                 this._dispatchEvent(EVENTS.SUBMIT_LOGOUT);
-                this._doLogout()
-                    .then(() => this.refreshUserData());
+                this._doLogout();
             })
     }
 
