@@ -10,8 +10,15 @@
     cursor: pointer;
   }
 
-  .hidden {
-    display: none;
+  .wds-global-navigation__search.hidden-search {
+    .wds-global-navigation__search-input-wrapper {
+      border-bottom: none;
+    }
+
+    svg, svg:hover {
+      color: white;
+      pointer-events: none;
+    }
   }
 
   .global-navigation-user-sign-out form {

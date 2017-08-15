@@ -34,13 +34,20 @@
             </ul>
           </div>
         </div>
-        <form class="wds-global-navigation__search {{classes.searchForm}}">
+        <form class="wds-global-navigation__search {{#if searchHidden}}hidden-search{{/if}}">
           <div class="wds-global-navigation__search-input-wrapper wds-dropdown ">
             <label class="wds-dropdown__toggle wds-global-navigation__search-label">
               <svg class="wds-icon wds-icon-small wds-global-navigation__search-label-icon">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#wds-icons-magnifying-glass"></use>
               </svg>
-              <input type="search" name="query" placeholder="{{strings.global-navigation-search-placeholder-inactive}}" autocomplete="off" class="wds-global-navigation__search-input">
+              <input
+                  class="wds-global-navigation__search-input"
+                  type="search"
+                  name="query"
+                  placeholder="{{#unless searchHidden}}{{strings.global-navigation-search-placeholder-inactive}}{{/unless}}"
+                  autocomplete="off"
+                  {{#if searchHidden}}disabled{{/if}}
+              >
             </label>
             <button class="wds-button wds-is-text wds-global-navigation__search-close" type="reset">
               <svg class="wds-icon wds-icon-small wds-global-navigation__search-close-icon">

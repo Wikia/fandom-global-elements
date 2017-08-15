@@ -19,7 +19,6 @@ const headroomElementSelector = 'header.wds-global-navigation';
 const CSS_CLASSES = {
     HEADROOM_PINNED: 'headroom--pinned',
     HEADROOM_UNPINNED: 'headroom--unpinned',
-    HIDDEN: 'hidden',
     SEARCH_ACTIVE: 'wds-search-is-active',
     USER_LOGGED_IN: 'wds-user-is-logged-in'
 };
@@ -105,6 +104,10 @@ export default class FandomGlobalHeader extends HTMLElement {
         return !this.rootElement.querySelector(headroomElementSelector).classList.contains(CSS_CLASSES.HEADROOM_UNPINNED);
     }
 
+    _isSearchHidden() {
+        return this.atts.getAsBool(ATTRIBUTES.HIDE_SEARCH);
+    }
+
     _dispatchEvent(name, detail = {}) {
         this.dispatchEvent(new CustomEvent(name, { detail }));
     }
@@ -125,9 +128,7 @@ export default class FandomGlobalHeader extends HTMLElement {
     _draw() {
         const content = headerTemplate({
             strings: this.strings,
-            classes: {
-                searchForm: this.atts.getAsBool(ATTRIBUTES.HIDE_SEARCH) ? CSS_CLASSES.HIDDEN : ''
-            }
+            searchHidden: this._isSearchHidden()
         });
 
         const css = `<style>${designSystemStyle.toString()} ${style.toString()}</style>`;
@@ -216,6 +217,10 @@ export default class FandomGlobalHeader extends HTMLElement {
     }
 
     _bindSearchActions() {
+        if (this._isSearchHidden()) {
+            return;
+        }
+
         const container = this.rootElement.querySelector('.wds-global-navigation');
         const searchForm = this.rootElement.querySelector('.wds-global-navigation__search');
         const input = searchForm.querySelector('input[name=query]');
