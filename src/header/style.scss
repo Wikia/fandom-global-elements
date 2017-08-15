@@ -11,12 +11,21 @@
   }
 
   .wds-global-navigation__search.hidden-search {
+    input {
+
+      &::placeholder {
+        color: transparent;
+      }
+
+      background-color: transparent;
+    }
+
     .wds-global-navigation__search-input-wrapper {
       border-bottom: none;
     }
 
     svg, svg:hover {
-      color: white;
+      color: transparent;
       pointer-events: none;
     }
   }
