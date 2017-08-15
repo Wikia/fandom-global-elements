@@ -2768,7 +2768,6 @@ var headroomElementSelector = 'header.wds-global-navigation';
 var CSS_CLASSES = {
     HEADROOM_PINNED: 'headroom--pinned',
     HEADROOM_UNPINNED: 'headroom--unpinned',
-    HIDDEN: 'hidden',
     SEARCH_ACTIVE: 'wds-search-is-active',
     USER_LOGGED_IN: 'wds-user-is-logged-in'
 };
@@ -2874,6 +2873,11 @@ var FandomGlobalHeader = function (_HTMLElement) {
             return !this.rootElement.querySelector(headroomElementSelector).classList.contains(CSS_CLASSES.HEADROOM_UNPINNED);
         }
     }, {
+        key: '_isSearchHidden',
+        value: function _isSearchHidden() {
+            return this.atts.getAsBool(ATTRIBUTES.HIDE_SEARCH);
+        }
+    }, {
         key: '_dispatchEvent',
         value: function _dispatchEvent(name) {
             var detail = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -2902,9 +2906,7 @@ var FandomGlobalHeader = function (_HTMLElement) {
         value: function _draw() {
             var content = (0, _header2.default)({
                 strings: this.strings,
-                classes: {
-                    searchForm: this.atts.getAsBool(ATTRIBUTES.HIDE_SEARCH) ? CSS_CLASSES.HIDDEN : ''
-                }
+                searchHidden: this._isSearchHidden()
             });
 
             var css = '<style>' + _styles2.default.toString() + ' ' + _style2.default.toString() + '</style>';
@@ -3044,6 +3046,10 @@ var FandomGlobalHeader = function (_HTMLElement) {
         key: '_bindSearchActions',
         value: function _bindSearchActions() {
             var _this8 = this;
+
+            if (this._isSearchHidden()) {
+                return;
+            }
 
             var container = this.rootElement.querySelector('.wds-global-navigation');
             var searchForm = this.rootElement.querySelector('.wds-global-navigation__search');
@@ -3626,8 +3632,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 var Handlebars = __webpack_require__(0);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
-module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+    return "hidden-search";
+},"3":function(container,depth0,helpers,partials,data) {
+    return "disabled";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "<div class=\"wds-global-navigation__wrapper\">\n  <header class=\"wds-global-navigation\">\n    <div class=\"wds-global-navigation__content-bar\">\n      <a class=\"wds-global-navigation__logo\" href=\"http://fandom.wikia.com\">\n        <svg class=\"wds-global-navigation__logo-image wds-is-wds-company-logo-fandom\">\n          <use xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"#wds-company-logo-fandom\"></use>\n        </svg>\n        <svg class=\"wds-global-navigation__logo-image wds-is-wds-company-logo-powered-by-wikia\">\n          <use xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"#wds-company-logo-powered-by-wikia\"></use>\n        </svg>\n      </a>\n      <div class=\"wds-global-navigation__links-and-search\">\n        <a class=\"wds-global-navigation__link wds-is-games\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.strings : depth0)) != null ? stack1["global-navigation-fandom-overview-link-vertical-games"] : stack1), depth0))
@@ -3644,10 +3654,12 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
     + "</a>\n              </li>\n              <li>\n                <a class=\"wds-global-navigation__dropdown-link university-link\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.strings : depth0)) != null ? stack1["global-navigation-wikis-fandom-university"] : stack1), depth0))
     + "</a>\n              </li>\n            </ul>\n          </div>\n        </div>\n        <form class=\"wds-global-navigation__search "
-    + alias2(alias1(((stack1 = (depth0 != null ? depth0.classes : depth0)) != null ? stack1.searchForm : stack1), depth0))
-    + "\">\n          <div class=\"wds-global-navigation__search-input-wrapper wds-dropdown \">\n            <label class=\"wds-dropdown__toggle wds-global-navigation__search-label\">\n              <svg class=\"wds-icon wds-icon-small wds-global-navigation__search-label-icon\">\n                <use xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"#wds-icons-magnifying-glass\"></use>\n              </svg>\n              <input type=\"search\" name=\"query\" placeholder=\""
+    + ((stack1 = helpers["if"].call(alias3,(depth0 != null ? depth0.searchHidden : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\">\n          <div class=\"wds-global-navigation__search-input-wrapper wds-dropdown \">\n            <label class=\"wds-dropdown__toggle wds-global-navigation__search-label\">\n              <svg class=\"wds-icon wds-icon-small wds-global-navigation__search-label-icon\">\n                <use xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"#wds-icons-magnifying-glass\"></use>\n              </svg>\n              <input\n                  class=\"wds-global-navigation__search-input\"\n                  type=\"search\"\n                  name=\"query\"\n                  placeholder=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.strings : depth0)) != null ? stack1["global-navigation-search-placeholder-inactive"] : stack1), depth0))
-    + "\" autocomplete=\"off\" class=\"wds-global-navigation__search-input\">\n            </label>\n            <button class=\"wds-button wds-is-text wds-global-navigation__search-close\" type=\"reset\">\n              <svg class=\"wds-icon wds-icon-small wds-global-navigation__search-close-icon\">\n                <use xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"#wds-icons-cross\"></use>\n              </svg>\n            </button>\n            <div class=\"wds-dropdown__content wds-global-navigation__search-suggestions\">\n              <ul class=\"wds-has-ellipsis wds-is-linked wds-list\"></ul>\n            </div>\n            <button class=\"wds-button wds-global-navigation__search-submit\" type=\"button\" disabled>\n              <svg class=\"wds-icon wds-icon-small wds-global-navigation__search-submit-icon\">\n                <use xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"#wds-icons-arrow\"></use>\n              </svg>\n            </button>\n          </div>\n        </form>\n      </div>\n      <div class=\"user-menu\"></div>\n      <div class=\"wds-global-navigation__start-a-wiki\">\n        <a class=\"wds-global-navigation__start-a-wiki-button wds-button wds-is-squished wds-is-secondary\">\n          <span class=\"wds-global-navigation__start-a-wiki-caption\">"
+    + "\"\n                  autocomplete=\"off\"\n                  "
+    + ((stack1 = helpers["if"].call(alias3,(depth0 != null ? depth0.searchHidden : depth0),{"name":"if","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\n              >\n            </label>\n            <button class=\"wds-button wds-is-text wds-global-navigation__search-close\" type=\"reset\">\n              <svg class=\"wds-icon wds-icon-small wds-global-navigation__search-close-icon\">\n                <use xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"#wds-icons-cross\"></use>\n              </svg>\n            </button>\n            <div class=\"wds-dropdown__content wds-global-navigation__search-suggestions\">\n              <ul class=\"wds-has-ellipsis wds-is-linked wds-list\"></ul>\n            </div>\n            <button class=\"wds-button wds-global-navigation__search-submit\" type=\"button\" disabled>\n              <svg class=\"wds-icon wds-icon-small wds-global-navigation__search-submit-icon\">\n                <use xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"#wds-icons-arrow\"></use>\n              </svg>\n            </button>\n          </div>\n        </form>\n      </div>\n      <div class=\"user-menu\"></div>\n      <div class=\"wds-global-navigation__start-a-wiki\">\n        <a class=\"wds-global-navigation__start-a-wiki-button wds-button wds-is-squished wds-is-secondary\">\n          <span class=\"wds-global-navigation__start-a-wiki-caption\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.strings : depth0)) != null ? stack1["global-navigation-create-wiki-link-start-wikia"] : stack1), depth0))
     + "</span>\n          <svg class=\"wds-global-navigation__start-a-wiki-icon wds-icon\">\n            <use xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"#wds-icons-plus\"></use>\n          </svg>\n        </a>\n      </div>\n    </div>\n  </header>\n</div>";
 },"useData":true});
@@ -3924,7 +3936,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, ".wds-global-navigation {\n  font-family: sans-serif;\n  font-style: normal;\n  font-weight: normal;\n  position: fixed;\n  width: 100%;\n  z-index: 2000; }\n  .wds-global-navigation a:hover {\n    cursor: pointer; }\n  .wds-global-navigation .hidden {\n    display: none; }\n  .wds-global-navigation .global-navigation-user-sign-out form {\n    margin-bottom: 0; }\n  .wds-global-navigation.headroom {\n    will-change: transform;\n    transition: transform 200ms linear; }\n    .wds-global-navigation.headroom.headroom--pinned {\n      transform: translateY(0%); }\n    .wds-global-navigation.headroom.headroom--unpinned {\n      transform: translateY(-100%); }\n", ""]);
+exports.push([module.i, ".wds-global-navigation {\n  font-family: sans-serif;\n  font-style: normal;\n  font-weight: normal;\n  position: fixed;\n  width: 100%;\n  z-index: 2000; }\n  .wds-global-navigation a:hover {\n    cursor: pointer; }\n  .wds-global-navigation .wds-global-navigation__search.hidden-search input {\n    background-color: transparent; }\n    .wds-global-navigation .wds-global-navigation__search.hidden-search input::placeholder {\n      color: transparent; }\n  .wds-global-navigation .wds-global-navigation__search.hidden-search .wds-global-navigation__search-input-wrapper {\n    border-bottom: none; }\n  .wds-global-navigation .wds-global-navigation__search.hidden-search svg, .wds-global-navigation .wds-global-navigation__search.hidden-search svg:hover {\n    color: transparent;\n    pointer-events: none; }\n  .wds-global-navigation .global-navigation-user-sign-out form {\n    margin-bottom: 0; }\n  .wds-global-navigation.headroom {\n    will-change: transform;\n    transition: transform 200ms linear; }\n    .wds-global-navigation.headroom.headroom--pinned {\n      transform: translateY(0%); }\n    .wds-global-navigation.headroom.headroom--unpinned {\n      transform: translateY(-100%); }\n", ""]);
 
 // exports
 
