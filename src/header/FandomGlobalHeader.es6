@@ -9,6 +9,7 @@ import AttributeHelper from '../helpers/AttributeHelper.es6';
 import SvgHelper from '../helpers/svg/SvgHelper.es6';
 import PopupHelper  from '../helpers/PopupHelper.es6';
 import getStrings from '../getStrings.es6';
+import EVENTS from './events.es6';
 import { fromNavResponse, validateUserData } from './userData.es6';
 import getOrCreateTemplate from '../getOrCreateTemplate.es6';
 import designSystemStyle from 'design-system/dist/css/styles.css';
@@ -16,6 +17,7 @@ import style from './style.scss';
 
 const headroomElementSelector = 'header.wds-global-navigation';
 
+// desktop
 const CSS_CLASSES = {
     HEADROOM_PINNED: 'headroom--pinned',
     HEADROOM_UNPINNED: 'headroom--unpinned',
@@ -23,11 +25,13 @@ const CSS_CLASSES = {
     USER_LOGGED_IN: 'wds-user-is-logged-in'
 };
 
+// both
 const ATTRIBUTES = {
     HIDE_SEARCH: 'hide-search',
     USER_DATA: 'user-data'
 };
 
+// desktop (will need mobile separately)
 const HEADROOM_OPTIONS = {
     offset: 0,
     tolerance: {
@@ -40,26 +44,7 @@ const HEADROOM_OPTIONS = {
     }
 };
 
-export const EVENTS = {
-    AUTH_SUCCESS: 'auth-success',
-    CLICK_CREATE_WIKI: 'click-create-wiki',
-    CLICK_LOGO: 'click-logo',
-    CLICK_REGISTER: 'click-register',
-    CLICK_SIGN_IN: 'click-sign-in',
-    CLICK_VERTICAL_GAMES: 'click-vertical-games',
-    CLICK_VERTICAL_MOVIES: 'click-vertical-movies',
-    CLICK_VERTICAL_TV: 'click-vertical-tv',
-    CLICK_MESSAGE_WALL: 'click-message-wall',
-    CLICK_WIKIS_CENTRAL: 'click-wikis-central',
-    CLICK_WIKIS_EXPLORE: 'click-wikis-explore',
-    CLICK_WIKIS_UNIVERSITY: 'click-wikis-university',
-    LOGOUT_SUCCESS: 'logout-success',
-    PIN_HEADROOM: 'pin-headroom',
-    SUBMIT_LOGOUT: 'submit-logout',
-    SUBMIT_SEARCH: 'submit-search',
-    UNPIN_HEADROOM: 'unpin-headroom'
-};
-
+// both
 function _fetch(url, options) {
     return fetch(url, Object.assign({}, { credentials: 'include' }, options));
 }

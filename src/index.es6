@@ -1,4 +1,4 @@
-import FandomGlobalHeader, { EVENTS as HEADER_EVENTS } from './header/FandomGlobalHeader.es6';
+import FandomGlobalHeader, { EVENTS as HEADER_EVENTS } from './header/events.es6';
 import FandomGlobalFooter from './footer/FandomGlobalFooter.es6';
 
 export const EVENTS = {
