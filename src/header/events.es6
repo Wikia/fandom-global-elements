@@ -1,4 +1,4 @@
-export default {
+export const EVENTS = {
     AUTH_SUCCESS: 'auth-success',
     CLICK_CREATE_WIKI: 'click-create-wiki',
     CLICK_LOGO: 'click-logo',

@@ -9,7 +9,7 @@ import AttributeHelper from '../helpers/AttributeHelper.es6';
 import SvgHelper from '../helpers/svg/SvgHelper.es6';
 import PopupHelper  from '../helpers/PopupHelper.es6';
 import getStrings from '../getStrings.es6';
-import EVENTS from './events.es6';
+import { EVENTS } from './events.es6';
 import { fromNavResponse, validateUserData } from './userData.es6';
 import getOrCreateTemplate from '../getOrCreateTemplate.es6';
 import designSystemStyle from 'design-system/dist/css/styles.css';
