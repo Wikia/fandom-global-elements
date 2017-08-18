@@ -1,3 +1,5 @@
+@import '../../node_modules/design-system/style-guide/styles/wds-variables/_breakpoints.scss';
+
 .wds-global-navigation {
   font-family: sans-serif;
   font-style: normal;
@@ -29,5 +31,11 @@
     &.headroom--unpinned {
       transform: translateY(-100%);
     }
+  }
+}
+
+.wds-global-navigation__wrapper {
+  @media #{$wds-breakpoint-s-only} {
+    display: none;
   }
 }

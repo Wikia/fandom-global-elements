@@ -74,7 +74,10 @@ export default class FandomGlobalHeader extends HTMLElement {
         this.headroom = null;
 
         this._draw();
-        this.headroom = new Headroom(this.rootElement.querySelector(headroomElementSelector), this._buildHeadroomOptions());
+        this.headroom = new Headroom(
+            this.rootElement.querySelector(headroomElementSelector),
+            this._buildHeadroomOptions()
+        );
         const userData = validateUserData(this.atts.getAsJson(ATTRIBUTES.USER_DATA));
         this._updateUserData(userData);
         this._bindSearchActions();
@@ -267,27 +270,59 @@ export default class FandomGlobalHeader extends HTMLElement {
     }
 
     _updateNavLinks(json) {
-        this._updateLink('a.wds-global-navigation__start-a-wiki-button', json.create_wiki.header.href, EVENTS.CLICK_CREATE_WIKI);
-        this._updateLink('a.wds-global-navigation__logo', json.logo.header.href, EVENTS.CLICK_LOGO);
-        this._updateLink('a.wds-global-navigation__link.wds-is-games', json.fandom_overview.links[0].href, EVENTS.CLICK_VERTICAL_GAMES);
-        this._updateLink('a.wds-global-navigation__link.wds-is-movies', json.fandom_overview.links[1].href, EVENTS.CLICK_VERTICAL_MOVIES);
-        this._updateLink('a.wds-global-navigation__link.wds-is-tv', json.fandom_overview.links[2].href, EVENTS.CLICK_VERTICAL_TV);
-        this._updateLink('.wds-global-navigation__wikis-menu .wds-dropdown__content a.explore-link', json.wikis.links[0].href, EVENTS.CLICK_WIKIS_EXPLORE);
-        this._updateLink('.wds-global-navigation__wikis-menu .wds-dropdown__content a.central-link', json.wikis.links[1].href, EVENTS.CLICK_WIKIS_CENTRAL);
-        this._updateLink('.wds-global-navigation__wikis-menu .wds-dropdown__content a.university-link', json.wikis.links[2].href, EVENTS.CLICK_WIKIS_UNIVERSITY);
+        this._updateLink(
+            'a.wds-global-navigation__start-a-wiki-button',
+            json.create_wiki.header.href,
+            EVENTS.CLICK_CREATE_WIKI
+        );
+        this._updateLink(
+            'a.wds-global-navigation__logo',
+            json.logo.header.href,
+            EVENTS.CLICK_LOGO
+        );
+        this._updateLink(
+            'a.wds-global-navigation__link.wds-is-games',
+            json.fandom_overview.links[0].href,
+            EVENTS.CLICK_VERTICAL_GAMES
+        );
+        this._updateLink(
+            'a.wds-global-navigation__link.wds-is-movies',
+            json.fandom_overview.links[1].href,
+            EVENTS.CLICK_VERTICAL_MOVIES
+        );
+        this._updateLink(
+            'a.wds-global-navigation__link.wds-is-tv',
+            json.fandom_overview.links[2].href,
+            EVENTS.CLICK_VERTICAL_TV
+        );
+        this._updateLink(
+            '.wds-global-navigation__wikis-menu .wds-dropdown__content a.explore-link',
+            json.wikis.links[0].href,
+            EVENTS.CLICK_WIKIS_EXPLORE
+        );
+        this._updateLink(
+            '.wds-global-navigation__wikis-menu .wds-dropdown__content a.central-link',
+            json.wikis.links[1].href,
+            EVENTS.CLICK_WIKIS_CENTRAL
+        );
+        this._updateLink(
+            '.wds-global-navigation__wikis-menu .wds-dropdown__content a.university-link',
+            json.wikis.links[2].href,
+            EVENTS.CLICK_WIKIS_UNIVERSITY
+        );
     }
 
-    _updateLink(selectorOrComponent, href, eventName) {
-        const component = typeof selectorOrComponent === 'string' ?
-            this.rootElement.querySelector(selectorOrComponent) :
-            selectorOrComponent;
+    _updateLink(selectorOrElement, href, eventName) {
+        const element = typeof selectorOrElement === 'string' ?
+            this.rootElement.querySelector(selectorOrElement) :
+            selectorOrElement;
 
-        if (component) {
+        if (element) {
             if (href) {
-                component.setAttribute('href', href);
+                element.setAttribute('href', href);
             }
 
-            component.addEventListener('click', (e) => {
+            element.addEventListener('click', (e) => {
                 this._dispatchEvent(eventName, { href, originalEvent: e});
             })
         }
