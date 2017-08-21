@@ -1,9 +1,9 @@
 import 'whatwg-fetch';
-import getStrings from '../getStrings.es6';
-import getOrCreateTemplate from '../getOrCreateTemplate.es6';
+import getStrings from '../../getStrings.es6';
+import getOrCreateTemplate from '../../getOrCreateTemplate.es6';
 import footerTemplate from './templates/footer.handlebars';
-import AttributeHelper from '../helpers/AttributeHelper.es6';
-import SvgHelper from '../helpers/svg/SvgHelper.es6';
+import AttributeHelper from '../../helpers/AttributeHelper.es6';
+import SvgHelper from '../../helpers/svg/SvgHelper.es6';
 import footerStyle from './style.scss';
 
 // FIXME: Can this be included globally or reduced?

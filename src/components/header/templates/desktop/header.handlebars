@@ -2,12 +2,8 @@
   <header class="wds-global-navigation">
     <div class="wds-global-navigation__content-bar">
       <a class="wds-global-navigation__logo" href="http://fandom.wikia.com">
-        <svg class="wds-global-navigation__logo-image wds-is-wds-company-logo-fandom">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#wds-company-logo-fandom"></use>
-        </svg>
-        <svg class="wds-global-navigation__logo-image wds-is-wds-company-logo-powered-by-wikia">
-          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#wds-company-logo-powered-by-wikia"></use>
-        </svg>
+        {{> ../svg class='wds-global-navigation__logo-image wds-is-wds-company-logo-fandom' image='wds-company-logo-fandom'}}
+        {{> ../svg class='wds-global-navigation__logo-image wds-is-wds-company-logo-powered-by-wikia' image='wds-company-logo-powered-by-wikia'}}
       </a>
       <div class="wds-global-navigation__links-and-search">
         <a class="wds-global-navigation__link wds-is-games">{{strings.global-navigation-fandom-overview-link-vertical-games}}</a>
