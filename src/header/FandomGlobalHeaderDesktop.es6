@@ -13,7 +13,7 @@ import { fromNavResponse, validateUserData } from './userData.es6';
 import { request, requestNavInfo } from './services.es6';
 import getOrCreateTemplate from '../getOrCreateTemplate.es6';
 import designSystemStyle from 'design-system/dist/css/styles.css';
-import style from './style.scss';
+import style from './styles-desktop.scss';
 
 const headroomElementSelector = 'header.wds-global-navigation';
 
