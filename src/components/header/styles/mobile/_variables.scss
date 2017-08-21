@@ -1,0 +1,25 @@
+@import '../../../../../node_modules/design-system/style-guide/styles/wds-variables/z-index-scale';
+
+$site-head-top-border-height: 6px;
+$site-head-content-height: 49px;
+$site-head-fandom-bar-height: 23px;
+$site-head-height: $site-head-top-border-height + $site-head-content-height;
+$site-head-with-fandom-bar-height: $site-head-height + $site-head-fandom-bar-height;
+$icon-site-head-width: 60px;
+$icon-site-head-height: 50px;
+$head-fandom-bar-font-size: 12px;
+$home-of-fandom-letter-spacing: 0.5px;
+$z-header: $z-6;
+$nav-container-padding: 6px;
+$icon-size: 25px;
+$site-head-box-shadow-color: rgba(0, 0, 0, .15);
+$icon-button-size: 48px;
+$site-head-default-box-shadow: 0 1px 4px 0 $site-head-box-shadow-color;
+$z-site-head: $z-7;
+
+// TODO: these colors are included in the style guide but not exported for consumption
+$color-blue-gray-light: #E6EBF2;
+$color-blue-gray-dark: #656E78;
+$color-blue-dark: #092344;
+$vapor: #F6F6F6;
+

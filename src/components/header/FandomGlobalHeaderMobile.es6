@@ -1,7 +1,7 @@
 import headerTemplate from './templates/mobile/mobile.handlebars';
 import SvgHelper from '../../helpers/svg/SvgHelper.es6';
 import getOrCreateTemplate from '../../getOrCreateTemplate.es6';
-import style from './styles-mobile.scss';
+import style from './styles/mobile/_site-head.scss';
 import designSystemStyle from 'design-system/dist/css/styles.css';
 
 export default class FandomGlobalHeaderMobile extends HTMLElement {
