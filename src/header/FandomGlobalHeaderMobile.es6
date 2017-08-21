@@ -1,4 +1,4 @@
-import headerTemplate from './templates/mobile.handlebars';
+import headerTemplate from './templates/mobile/mobile.handlebars';
 import SvgHelper from '../helpers/svg/SvgHelper.es6';
 import getOrCreateTemplate from '../getOrCreateTemplate.es6';
 import style from './styles-mobile.scss';
