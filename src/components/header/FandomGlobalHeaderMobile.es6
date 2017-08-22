@@ -18,6 +18,9 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
         this.rootElement = this.attachShadow({ mode: 'open' });
         this.svgs = new SvgHelper(this.rootElement);
         this._draw();
+
+        // const json = this.attrs.getAttribute('mw-data');
+
         this._initSideNavDrawerContent();
     }
 

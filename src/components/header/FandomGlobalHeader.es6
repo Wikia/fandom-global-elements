@@ -1,6 +1,7 @@
 import FandomGlobalHeaderDesktop from './FandomGlobalHeaderDesktop.es6';
 import FandomGlobalHeaderMobile from './FandomGlobalHeaderMobile.es6';
 import AttributeHelper from '../../helpers/AttributeHelper.es6';
+import { requestNavInfo } from './services.es6';
 
 export default class FandomGlobalHeader extends HTMLElement {
     connectedCallback() {
@@ -12,11 +13,22 @@ export default class FandomGlobalHeader extends HTMLElement {
         this.atts = new AttributeHelper(this);
         this.rootElement = this.attachShadow({ mode: 'open' });
 
-        this.applyAttributes();
-        this._draw();
+        requestNavInfo(this.atts.mwBase, this.atts.langCode)
+            .then((json) => {
+                this._applyMediaWikiData(json);
+                this._applyPassedAttributes();
+                this._draw();
+            })
     }
 
-    applyAttributes() {
+    _applyMediaWikiData(json) {
+        const data = JSON.stringify(json);
+        // TODO: make mw-data a constant
+        this.desktopHeader.atts.setAttribute('mw-data', data);
+        this.mobileHeader.atts.setAttribute('mw-data', data);
+    }
+
+    _applyPassedAttributes() {
         const attributes = this.atts.getAllAttributes();
 
         this.desktopHeader.atts.setAttributes(attributes);

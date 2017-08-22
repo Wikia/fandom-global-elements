@@ -62,21 +62,26 @@ export default class FandomGlobalHeader extends HTMLElement {
             this.rootElement.querySelector(headroomElementSelector),
             this._buildHeadroomOptions()
         );
+
+        // TODO: test the use case of passing in user data
         const userData = validateUserData(this.atts.getAsJson(ATTRIBUTES.USER_DATA));
-        this._updateUserData(userData);
+        const json = this.atts.getAsJson('mw-data');
+        const userLinks = json.user && json.user.links;
+
+        if (userData) {
+            this._updateUserData(userData);
+
+            if (userLinks) {
+                this._bindUserActions(userLinks);
+            }
+        } else {
+            this._updateUserData(fromNavResponse(json), userLinks);
+            this._updateNavLinks(json);
+        }
+
         this._bindSearchActions();
 
-        requestNavInfo(this.atts.mwBase, this.atts.langCode)
-            .then((json) => {
-                this._updateNavLinks(json);
-                const userLinks = json.user && json.user.links;
 
-                if (!userData) {
-                    this._updateUserData(fromNavResponse(json), userLinks);
-                } else if (userLinks) {
-                    this._bindUserActions(userLinks);
-                }
-            });
     }
 
     disconnectedCallback() {
