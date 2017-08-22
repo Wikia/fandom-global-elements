@@ -24,6 +24,7 @@
 	background-color: #fff;
 	border-bottom: 1px solid $vapor;
 	border-top: $site-head-top-border-height solid $color-blue-dark;
+	box-sizing: border-box;
 	direction: ltr;
 	display: flex;
 	flex-direction: row;

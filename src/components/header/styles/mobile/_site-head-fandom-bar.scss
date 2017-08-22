@@ -31,7 +31,10 @@
 		transform: uppercase;
 	}
 	a {
+		align-items: center;
 		color: $color-blue-gray-dark;
+		display: flex;
+		line-height: 24px;
 		margin-top: 1px;
 	}
 	//end
