@@ -1,0 +1,19 @@
+<div class="side-nav-drawer">
+  <div class="side-nav-drawer__content">
+    {{#if model.inRoot}}
+      {{#if isUserAuthenticated}}
+          {{!-- user --}}
+      {{else}}
+        {{!-- anon --}}
+      {{/if}}
+    {{else}}
+      {{!-- sub-menu --}}
+    {{/if}}
+
+    {{nav-menu
+        items=model.items
+        onClickHandler=(action 'onClick')
+        onChangeItemHandler=(action 'goToSubNav')
+    }}
+  </div>
+</div>

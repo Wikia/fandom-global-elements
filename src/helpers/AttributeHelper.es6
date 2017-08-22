@@ -9,8 +9,36 @@ export default class AttributeHelper {
         this.el = el;
     }
 
-    getAttribute = (attribute, defaultValue) => (this.el.hasAttribute(attribute) ? this.el.getAttribute(attribute) : defaultValue);
-    getAsBool = (attribute, defaultValue = false) => this.getAttribute(attribute, defaultValue.toString()).toLowerCase() === 'true';
+    setAttribute = (attribute, value) => {
+        this.el.setAttribute(attribute, value);
+    };
+
+    setAttributes = (attributes) => {
+        for (let attr in attributes) {
+            if (attributes.hasOwnProperty(attr)) {
+                this.setAttribute(attr, attributes[attr]);
+            }
+        }
+    };
+
+    getAttribute = (attribute, defaultValue) => (
+        this.el.hasAttribute(attribute) ? this.el.getAttribute(attribute) : defaultValue
+    );
+
+    getAllAttributes() {
+        const attrObj = {};
+        Array.prototype.forEach.call(this.el.attributes, (value, index, namedNodeMap) => {
+            let attr = namedNodeMap.item(index);
+            attrObj[attr.name] = attr.value;
+        });
+
+        return attrObj;
+    }
+
+    getAsBool = (attribute, defaultValue = false) => (
+        this.getAttribute(attribute, defaultValue.toString()).toLowerCase() === 'true'
+    );
+
     getAsJson = (attribute, defaultValue = null) => {
         if (!this.el.hasAttribute(attribute)) {
             return defaultValue;

@@ -45,13 +45,17 @@ const HEADROOM_OPTIONS = {
 };
 
 export default class FandomGlobalHeader extends HTMLElement {
-    connectedCallback() {
-        this.rootElement = this.attachShadow({ mode: 'open' });
+    constructor(...args) {
+        super(...args);
         this.atts = new AttributeHelper(this);
-        this.svgs = new SvgHelper(this.rootElement);
         this.popup = new PopupHelper((e) => this._onMessage(e));
         this.strings = getStrings(this.atts.langCode);
         this.headroom = null;
+    }
+
+    connectedCallback() {
+        this.rootElement = this.attachShadow({ mode: 'open' });
+        this.svgs = new SvgHelper(this.rootElement);
 
         this._draw();
         this.headroom = new Headroom(

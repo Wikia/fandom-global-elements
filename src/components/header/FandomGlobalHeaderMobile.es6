@@ -1,10 +1,16 @@
 import headerTemplate from './templates/mobile/mobile.handlebars';
 import SvgHelper from '../../helpers/svg/SvgHelper.es6';
+import AttributeHelper from '../../helpers/AttributeHelper.es6';
 import getOrCreateTemplate from '../../getOrCreateTemplate.es6';
 import style from './styles/mobile/styles-mobile.scss';
 import designSystemStyle from 'design-system/dist/css/styles.css';
 
 export default class FandomGlobalHeaderMobile extends HTMLElement {
+    constructor(...args) {
+        super(...args);
+        this.atts = new AttributeHelper(this);
+    }
+
     connectedCallback() {
         this.rootElement = this.attachShadow({ mode: 'open' });
         this.svgs = new SvgHelper(this.rootElement);
