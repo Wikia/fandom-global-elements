@@ -1,9 +1,15 @@
 @import '../../../../../node_modules/design-system/style-guide/styles/wds-variables/breakpoints';
+@import '../../../../../node_modules/design-system/style-guide/styles/wds-variables/_typography.scss';
 
 @import 'site-head';
 @import 'site-head-fandom-bar';
+@import 'wikia-drawer';
+@import 'wikia-nav';
 
-.site-head-container {
+
+.site-head-container, .side-nav-drawer {
+	font-family: $wds-font-family;
+
 	@media #{$wds-breakpoint-m-up} {
 		display: none;
 	}
