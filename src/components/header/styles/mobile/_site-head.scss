@@ -3,10 +3,6 @@
 
 @import 'variables';
 
-.site-body {
-	margin-top: $icon-site-head-width;
-}
-
 .site-head-headroom-un-pinned .site-head {
 	box-shadow: $site-head-default-box-shadow;
 
@@ -134,11 +130,5 @@
 		.site-head {
 			position: fixed;
 		}
-	}
-}
-
-.site-head-container, .side-nav-drawer {
-	@media #{$wds-breakpoint-m-up} {
-		display: none;
 	}
 }
