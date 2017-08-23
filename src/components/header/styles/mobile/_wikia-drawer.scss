@@ -1,9 +1,5 @@
 @import 'variables';
 
-.collapsed .side-nav-drawer {
-	display: none;
-}
-
 .side-nav-drawer {
 	color: #fff;
 	display: flex;
@@ -15,6 +11,10 @@
 	top: 0;
 	width: 100%;
 	z-index: $z-site-head - 1;
+
+	&.collapsed {
+		display: none;
+	}
 
 	a {
 		text-decoration: none;

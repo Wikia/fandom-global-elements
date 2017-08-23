@@ -75,6 +75,18 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
     }
 
     _initNavDrawer() {
+        const navIconWrapper = this.rootElement.querySelector('.site-head-icon-nav');
+        navIconWrapper.addEventListener('click', () => {
+            this.rootElement.querySelector('.side-nav-drawer').classList.toggle('collapsed');
+            navIconWrapper.querySelectorAll('svg').forEach((svg) => {
+                svg.classList.toggle('is-hidden');
+            })
+        });
+
+        this._initNavDrawerContent();
+    }
+
+    _initNavDrawerContent() {
         if (this.userData) {
             this._initUser();
         } else {
@@ -127,7 +139,7 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
         const killSubNav = () => {
             header.removeEventListener('click', killSubNav);
             header.classList.remove('wikia-nav__back');
-            this._initNavDrawer();
+            this._initNavDrawerContent();
         };
         header.addEventListener('click', killSubNav);
     }
