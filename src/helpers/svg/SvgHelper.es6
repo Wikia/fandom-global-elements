@@ -72,7 +72,7 @@ export default class SvgHelper {
             if (dictionarySvg) {
                 const newSvg = dictionarySvg.cloneNode(true);
                 newSvg.classList.remove(svgId);
-                existingSvg.classList.forEach(c => newSvg.classList.add(c));
+                Array.from(existingSvg.classList).forEach(c => newSvg.classList.add(c));
                 updateDefs(newSvg);
                 existingSvg.parentNode.replaceChild(newSvg, existingSvg);
             }
