@@ -4,7 +4,7 @@ import anonUserMenu from './templates/desktop/anon.handlebars';
 import userMenu from './templates/desktop/user.handlebars';
 import userLink from './templates/desktop/userLink.handlebars';
 import userMenuLogout from './templates/desktop/userMenuLogout.handlebars';
-import AttributeHelper from '../../helpers/AttributeHelper.es6';
+import AttributeHelper, { ATTRIBUTES } from '../../helpers/AttributeHelper.es6';
 import SvgHelper from '../../helpers/svg/SvgHelper.es6';
 import PopupHelper  from '../../helpers/PopupHelper.es6';
 import getStrings from '../../getStrings.es6';
@@ -23,12 +23,6 @@ const CSS_CLASSES = {
     HEADROOM_UNPINNED: 'headroom--unpinned',
     SEARCH_ACTIVE: 'wds-search-is-active',
     USER_LOGGED_IN: 'wds-user-is-logged-in'
-};
-
-// both
-const ATTRIBUTES = {
-    HIDE_SEARCH: 'hide-search',
-    USER_DATA: 'user-data'
 };
 
 // desktop (will need mobile separately)
@@ -65,7 +59,7 @@ export default class FandomGlobalHeader extends HTMLElement {
 
         // TODO: test the use case of passing in user data
         const userData = validateUserData(this.atts.getAsJson(ATTRIBUTES.USER_DATA));
-        const json = this.atts.getAsJson('mw-data');
+        const json = this.atts.getAsJson(ATTRIBUTES.MW_DATA);
         const userLinks = json.user && json.user.links;
 
         if (userData) {

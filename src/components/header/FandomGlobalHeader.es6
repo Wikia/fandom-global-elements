@@ -1,6 +1,6 @@
 import FandomGlobalHeaderDesktop from './FandomGlobalHeaderDesktop.es6';
 import FandomGlobalHeaderMobile from './FandomGlobalHeaderMobile.es6';
-import AttributeHelper from '../../helpers/AttributeHelper.es6';
+import AttributeHelper, { ATTRIBUTES } from '../../helpers/AttributeHelper.es6';
 import { requestNavInfo } from './services.es6';
 
 export default class FandomGlobalHeader extends HTMLElement {
@@ -15,17 +15,16 @@ export default class FandomGlobalHeader extends HTMLElement {
 
         requestNavInfo(this.atts.mwBase, this.atts.langCode)
             .then((json) => {
-                this._applyMediaWikiData(json);
+                this._applyMediaWikiDataAttribute(json);
                 this._applyPassedAttributes();
                 this._draw();
             })
     }
 
-    _applyMediaWikiData(json) {
+    _applyMediaWikiDataAttribute(json) {
         const data = JSON.stringify(json);
-        // TODO: make mw-data a constant
-        this.desktopHeader.atts.setAttribute('mw-data', data);
-        this.mobileHeader.atts.setAttribute('mw-data', data);
+        this.desktopHeader.atts.setAttribute(ATTRIBUTES.MW_DATA, data);
+        this.mobileHeader.atts.setAttribute(ATTRIBUTES.MW_DATA, data);
     }
 
     _applyPassedAttributes() {

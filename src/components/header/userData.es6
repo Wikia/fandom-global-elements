@@ -15,3 +15,17 @@ export function fromNavResponse(json) {
 export function validateUserData(data) {
     return data && data.name && data.avatar ? data : null;
 }
+
+export function getProfileLink(userLinks = null) {
+    let profileLinkData = null;
+
+    if (userLinks) {
+        profileLinkData = userLinks.find((link) => {
+            if (link.tracking_label == 'account.profile') {
+                return link;
+            }
+        })
+    }
+
+    return profileLinkData;
+}

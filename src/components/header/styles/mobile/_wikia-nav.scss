@@ -90,6 +90,10 @@ $side-nav-back-svg: url(data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2224p
 	.wikia-nav--logout {
 		color: $nav-logout-color;
 		float: right;
+
+		form {
+			margin: 0;
+		}
 	}
 }
 

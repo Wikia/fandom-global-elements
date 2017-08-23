@@ -4,6 +4,13 @@ const defaultLangCode = 'en';
 const defaultCityId = 177;
 const defaultVertical = 'Entertainment';
 
+export const ATTRIBUTES = {
+    HIDE_SEARCH: 'hide-search',
+    USER_DATA: 'user-data',
+    MW_DATA: 'mw-data'
+};
+
+
 export default class AttributeHelper {
     constructor(el) {
         this.el = el;
