@@ -47,9 +47,11 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
 
     _initAnon() {
         const container = this.rootElement.querySelector('.wikia-nav__header');
+        container.setAttribute('href', `${this.atts.mwBase}/join?redirect=${encodeURIComponent(window.location.href)}`);
 
         container.innerHTML = anonHeader({
-            strings: this.strings
+            loginText: this.strings['global-navigation-anon-sign-in'],
+            registerText: this.strings['global-navigation-anon-register']
         });
 
         this.svgs.overwrite();
