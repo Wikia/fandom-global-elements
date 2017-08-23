@@ -23,6 +23,8 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
         this.rootElement = this.attachShadow({ mode: 'open' });
         this.svgs = new SvgHelper(this.rootElement);
         this.mwData = this.atts.getAsJson(ATTRIBUTES.MW_DATA);
+        this.userData = validateUserData(this.atts.getAsJson(ATTRIBUTES.USER_DATA)) ||
+            fromNavResponse(this.mwData);
         this._draw();
     }
 
@@ -37,57 +39,52 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
         ShadyCSS.styleElement(this);
         this.rootElement.appendChild(document.importNode(template.content, true));
 
-        const userData = validateUserData(this.atts.getAsJson(ATTRIBUTES.USER_DATA)) ||
-            fromNavResponse(this.mwData);
-        const userLinks = this.mwData.user && this.mwData.user.links;
-
-
-        if (userData) {
-            // TODO: init user when desktop successfully logs you in
-            this._initUser(userData, userLinks);
-            this._bindLogout();
-        } else {
-            this._initAnon();
-        }
-
-        this._initNavMenu();
+        this._initNavDrawer();
 
         this.svgs.addSvgs();
         this.svgs.overwrite();
     }
 
     _initAnon() {
-        const children = [];
         const container = this.rootElement.querySelector('.wikia-nav__header');
 
-        children.push(anonHeader({
+        container.innerHTML = anonHeader({
             strings: this.strings
-        }));
+        });
 
-        container.innerHTML = children.join('');
+        this.svgs.overwrite();
     }
 
-    _initUser(userData, userLinks) {
-        const children = [];
+    // TODO: init user when desktop successfully logs you in
+    _initUser() {
+        const userLinks = this.mwData.user && this.mwData.user.links;
         const container = this.rootElement.querySelector('.wikia-nav__header'); // TODO: make constant
         const profileLink = getProfileLink(userLinks);
 
-        children.push(userHeader({
+        container.innerHTML = userHeader({
             unreadCount: 0,
             strings: this.strings,
-            currentUser: userData,
+            currentUser: this.userData,
             profileLink: profileLink ? profileLink.href : '#',
             logoutText: this.strings['global-navigation-user-sign-out']
-        }));
+        });
 
-        container.innerHTML = children.join('');
+        this._bindLogout();
     }
 
-    _initNavMenu() {
+    _initNavDrawer() {
+        if (this.userData) {
+            this._initUser();
+        } else {
+            this._initAnon();
+        }
+
         const container = this.rootElement.querySelector('.nav-menu');
         const fandomLinks = this.mwData.fandom_overview.links; // TODO: turn MWData into it's own model?
+        const wikisLink = this.mwData.wikis.header;
 
-        const brandedLinks = fandomLinks.map((link) => {
+        // TODO: cache these templates once they are rendered
+        const fandomTemplates = fandomLinks.map((link) => {
             return navMenuItem({
                 className: `nav-menu--external nav-menu--${link.brand}`,
                 href: link.href,
@@ -95,7 +92,42 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
             });
         });
 
-        container.innerHTML = brandedLinks.join('');
+        // TODO: cache these templates once they are rendered
+        const wikisTemplate = navMenuItem({
+            className: 'nav-menu--root nav-menu--explore',
+            name: this.strings[wikisLink.title.key]
+        });
+
+        container.innerHTML = `${fandomTemplates.join('')} ${wikisTemplate}`;
+
+        container.querySelector('.nav-menu--explore').addEventListener('click', () => {
+            this._initSubNav(this.strings['global-navigation-wikis-header'], this.mwData.wikis.links)
+        });
+    }
+
+    _initSubNav(headerText, links) {
+        const header = this.rootElement.querySelector('.wikia-nav__header'); // TODO: cache element
+        const nav = this.rootElement.querySelector('.nav-menu');
+
+        const linkTemplates = links.map((link) => {
+            return navMenuItem({
+                className: '',
+                href: link.href,
+                name: this.strings[link.title.key]
+            });
+        });
+
+        nav.innerHTML = linkTemplates.join('');
+
+        header.classList.add('wikia-nav__back');
+        header.innerHTML = headerText;
+
+        const killSubNav = () => {
+            header.removeEventListener('click', killSubNav);
+            header.classList.remove('wikia-nav__back');
+            this._initNavDrawer();
+        };
+        header.addEventListener('click', killSubNav);
     }
 
     _bindLogout() {
