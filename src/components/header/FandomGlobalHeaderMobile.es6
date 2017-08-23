@@ -1,6 +1,7 @@
 import headerTemplate from './templates/mobile/mobile.handlebars';
 import anonHeader from './templates/mobile/anon-header.handlebars';
 import userHeader from './templates/mobile/user-header.handlebars';
+import navMenuItem from './templates/mobile/nav-menu-item.handlebars';
 import SvgHelper from '../../helpers/svg/SvgHelper.es6';
 import { fromNavResponse, validateUserData, getProfileLink } from './userData.es6';
 import getStrings from '../../getStrings.es6';
@@ -21,6 +22,7 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
     connectedCallback() {
         this.rootElement = this.attachShadow({ mode: 'open' });
         this.svgs = new SvgHelper(this.rootElement);
+        this.mwData = this.atts.getAsJson(ATTRIBUTES.MW_DATA);
         this._draw();
     }
 
@@ -35,12 +37,9 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
         ShadyCSS.styleElement(this);
         this.rootElement.appendChild(document.importNode(template.content, true));
 
-        // check if anon then render anon header or user header
-        // render nav links
-        const mwData = this.atts.getAsJson(ATTRIBUTES.MW_DATA);
         const userData = validateUserData(this.atts.getAsJson(ATTRIBUTES.USER_DATA)) ||
-            fromNavResponse(mwData);
-        const userLinks = mwData.user && mwData.user.links;
+            fromNavResponse(this.mwData);
+        const userLinks = this.mwData.user && this.mwData.user.links;
 
 
         if (userData) {
@@ -51,23 +50,26 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
             this._initAnon();
         }
 
+        this._initNavMenu();
+
         this.svgs.addSvgs();
         this.svgs.overwrite();
     }
 
     _initAnon() {
         const children = [];
-        const container = this.rootElement.querySelector('.side-nav-drawer__content');
+        const container = this.rootElement.querySelector('.wikia-nav__header');
 
         children.push(anonHeader({
             strings: this.strings
         }));
+
         container.innerHTML = children.join('');
     }
 
     _initUser(userData, userLinks) {
         const children = [];
-        const container = this.rootElement.querySelector('.side-nav-drawer__content');
+        const container = this.rootElement.querySelector('.wikia-nav__header'); // TODO: make constant
         const profileLink = getProfileLink(userLinks);
 
         children.push(userHeader({
@@ -81,11 +83,25 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
         container.innerHTML = children.join('');
     }
 
+    _initNavMenu() {
+        const container = this.rootElement.querySelector('.nav-menu');
+        const fandomLinks = this.mwData.fandom_overview.links; // TODO: turn MWData into it's own model?
+
+        const brandedLinks = fandomLinks.map((link) => {
+            return navMenuItem({
+                className: `nav-menu--external nav-menu--${link.brand}`,
+                href: link.href,
+                name: this.strings[link.title.key]
+            });
+        });
+
+        container.innerHTML = brandedLinks.join('');
+    }
+
     _bindLogout() {
         this.rootElement
             .querySelector('.wikia-nav--logout form')
             .addEventListener('submit', (e) => {
-                debugger;
                 e.preventDefault();
                 this._dispatchEvent(EVENTS.SUBMIT_LOGOUT);
                 this._doLogout();
@@ -103,5 +119,17 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
     // TODO: this duplicates desktop version
     _dispatchEvent(name, detail = {}) {
         this.dispatchEvent(new CustomEvent(name, { detail }));
+    }
+
+    _bindUserActions() {
+
+    }
+
+    _bindAnonActions() {
+
+    }
+
+    _updateUserData() {
+
     }
 }

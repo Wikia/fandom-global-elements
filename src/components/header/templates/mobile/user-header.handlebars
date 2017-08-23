@@ -1,21 +1,19 @@
-<div class="wikia-nav__header">
-  <a href="{{profileLink}}"
-      class="wikia-nav--external wikia-nav--profile-link">
-    <figure class="wikia-nav__avatar user-profile-avatar">
-      {{#if unreadCount}}
-        <span class="wds-notifications__unread-mark">{{unreadCount}}</span>
-      {{/if}}
-      <img src={{currentUser.avatar}} alt="{{currentUser.name}}">
-    </figure>
-    {{currentUser.name}}
+<a href="{{profileLink}}"
+    class="wikia-nav--external wikia-nav--profile-link">
+  <figure class="wikia-nav__avatar user-profile-avatar">
+    {{#if unreadCount}}
+      <span class="wds-notifications__unread-mark">{{unreadCount}}</span>
+    {{/if}}
+    <img src={{currentUser.avatar}} alt="{{currentUser.name}}">
+  </figure>
+  {{currentUser.name}}
 
-    <div class="wikia-nav--external wikia-nav--logout">
-      <div class="wds-sign-out">
-        <form method="POST">
-          <button type="submit" class="wds-sign-out__button">{{logoutText}}</button>
-        </form>
-      </div>
+  <div class="wikia-nav--external wikia-nav--logout">
+    <div class="wds-sign-out">
+      <form method="POST">
+        <button type="submit" class="wds-sign-out__button">{{logoutText}}</button>
+      </form>
     </div>
+  </div>
 
-  </a>
-</div>
+</a>
