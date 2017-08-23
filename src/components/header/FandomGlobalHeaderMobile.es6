@@ -47,7 +47,10 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
 
     _initAnon() {
         const container = this.rootElement.querySelector('.wikia-nav__header');
-        container.setAttribute('href', `${this.atts.mwBase}/join?redirect=${encodeURIComponent(window.location.href)}`);
+        // TODO: unbind on init user event
+        container.addEventListener('click', () => {
+            window.location.href = `${this.atts.mwBase}/join?redirect=${encodeURIComponent(window.location.href)}`
+        });
 
         container.innerHTML = anonHeader({
             loginText: this.strings['global-navigation-anon-sign-in'],
@@ -55,6 +58,8 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
         });
 
         this.svgs.overwrite();
+
+        // TODO: add event
     }
 
     // TODO: init user when desktop successfully logs you in
@@ -72,11 +77,14 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
         });
 
         this._bindLogout();
+
+        // TODO: add event
     }
 
     _initNavDrawer() {
         const navIconWrapper = this.rootElement.querySelector('.site-head-icon-nav');
         navIconWrapper.addEventListener('click', () => {
+            // TODO: Add event
             this.rootElement.querySelector('.side-nav-drawer').classList.toggle('collapsed');
             navIconWrapper.querySelectorAll('svg').forEach((svg) => {
                 svg.classList.toggle('is-hidden');
@@ -117,6 +125,8 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
         container.querySelector('.nav-menu--explore').addEventListener('click', () => {
             this._initSubNav(this.strings['global-navigation-wikis-header'], this.mwData.wikis.links)
         });
+
+        // TODO: add event
     }
 
     _initSubNav(headerText, links) {
@@ -140,8 +150,10 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
             header.removeEventListener('click', killSubNav);
             header.classList.remove('wikia-nav__back');
             this._initNavDrawerContent();
+            // TODO: add event
         };
         header.addEventListener('click', killSubNav);
+        // TODO: add event
     }
 
     _bindLogout() {
@@ -172,10 +184,6 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
     }
 
     _bindAnonActions() {
-
-    }
-
-    _updateUserData() {
 
     }
 }
