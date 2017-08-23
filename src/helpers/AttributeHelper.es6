@@ -10,7 +10,6 @@ export const ATTRIBUTES = {
     MW_DATA: 'mw-data'
 };
 
-
 export default class AttributeHelper {
     constructor(el) {
         this.el = el;
