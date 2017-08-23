@@ -66,7 +66,7 @@ Local dev builds built with `yarn dev` are placed into `build/dev/fandom-element
 
 Release builds built with `yarn build` are placed into `dist/fandom-elements.js`.
 
-The output file DOES NOT contain the necessary polyfills. The necessary polyfills are included in separate js files under the `dist` directory.
+The output file DOES NOT contain the necessary polyfills. The necessary polyfills are included in separate js files under the `dist` directory. These are taken from the [webcomponents/webcomponentsjs](https://github.com/webcomponents/webcomponentsjs) repo at version 1.0.8.
 
 ### Usage
 
