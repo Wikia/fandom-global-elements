@@ -6,38 +6,28 @@ import SvgHelper from '../../helpers/svg/SvgHelper.es6';
 import { fromNavResponse, validateUserData, getProfileLink } from './userData.es6';
 import getStrings from '../../getStrings.es6';
 import { request } from './services.es6';
-import AttributeHelper, { ATTRIBUTES } from '../../helpers/AttributeHelper.es6';
+import { ATTRIBUTES } from '../../helpers/AttributeHelper.es6';
 import { EVENTS } from './events.es6';
-import getOrCreateTemplate from '../../getOrCreateTemplate.es6';
-import style from './styles/mobile/styles-mobile.scss';
-import designSystemStyle from 'design-system/dist/css/styles.css';
 
-export default class FandomGlobalHeaderMobile extends HTMLElement {
-    constructor(...args) {
-        super(...args);
-        this.atts = new AttributeHelper(this);
-        this.strings = getStrings(this.atts.langCode);
+export default class FandomGlobalHeaderMobile {
+    constructor(el, parent, data) {
+        this.el = el;
+        this.parent = parent;
+        this.mwData = data.mwData;
+        this.atts = data.attributes;
+        this.strings = getStrings(this.atts['lang-code']);
     }
 
-    connectedCallback() {
-        this.rootElement = this.attachShadow({ mode: 'open' });
-        this.svgs = new SvgHelper(this.rootElement);
-        this.mwData = this.atts.getAsJson(ATTRIBUTES.MW_DATA);
-        this.userData = validateUserData(this.atts.getAsJson(ATTRIBUTES.USER_DATA)) ||
+    init() {
+        this.svgs = new SvgHelper(this.el);
+        this.userData = validateUserData(this.atts[ATTRIBUTES.USER_DATA]) ||
             fromNavResponse(this.mwData);
         this._draw();
+        return this;
     }
 
     _draw() {
-        const content = headerTemplate();
-
-        // TODO: only include styles once (maybe with "standalone" param)
-        const css = `<style>${designSystemStyle.toString()} ${style.toString()}</style>`;
-        const template = getOrCreateTemplate('fandomGlobalHeaderMobile', css + content);
-
-        ShadyCSS.prepareTemplate(template, 'fandom-global-header-mobile');
-        ShadyCSS.styleElement(this);
-        this.rootElement.appendChild(document.importNode(template.content, true));
+        this.el.innerHTML = headerTemplate();
 
         this._initNavDrawer();
 
@@ -46,10 +36,10 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
     }
 
     _initAnon() {
-        const container = this.rootElement.querySelector('.wikia-nav__header');
+        const container = this.el.querySelector('.wikia-nav__header');
         // TODO: unbind on init user event
         container.addEventListener('click', () => {
-            window.location.href = `${this.atts.mwBase}/join?redirect=${encodeURIComponent(window.location.href)}`
+            window.location.href = `${this.atts['mw-base']}/join?redirect=${encodeURIComponent(window.location.href)}`
         });
 
         container.innerHTML = anonHeader({
@@ -65,7 +55,7 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
     // TODO: init user when desktop successfully logs you in
     _initUser() {
         const userLinks = this.mwData.user && this.mwData.user.links;
-        const container = this.rootElement.querySelector('.wikia-nav__header'); // TODO: make constant
+        const container = this.el.querySelector('.wikia-nav__header'); // TODO: make constant
         const profileLink = getProfileLink(userLinks);
 
         container.innerHTML = userHeader({
@@ -82,10 +72,10 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
     }
 
     _initNavDrawer() {
-        const navIconWrapper = this.rootElement.querySelector('.site-head-icon-nav');
+        const navIconWrapper = this.el.querySelector('.site-head-icon-nav');
         navIconWrapper.addEventListener('click', () => {
             // TODO: Add event
-            this.rootElement.querySelector('.side-nav-drawer').classList.toggle('collapsed');
+            this.el.querySelector('.side-nav-drawer').classList.toggle('collapsed');
             navIconWrapper.querySelectorAll('svg').forEach((svg) => {
                 svg.classList.toggle('is-hidden');
             })
@@ -101,7 +91,7 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
             this._initAnon();
         }
 
-        const container = this.rootElement.querySelector('.nav-menu');
+        const container = this.el.querySelector('.nav-menu');
         const fandomLinks = this.mwData.fandom_overview.links; // TODO: turn MWData into it's own model?
         const wikisLink = this.mwData.wikis.header;
 
@@ -130,8 +120,8 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
     }
 
     _initSubNav(headerText, links) {
-        const header = this.rootElement.querySelector('.wikia-nav__header'); // TODO: cache element
-        const nav = this.rootElement.querySelector('.nav-menu');
+        const header = this.el.querySelector('.wikia-nav__header'); // TODO: cache element
+        const nav = this.el.querySelector('.nav-menu');
 
         const linkTemplates = links.map((link) => {
             return navMenuItem({
@@ -157,7 +147,7 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
     }
 
     _bindLogout() {
-        this.rootElement
+        this.el
             .querySelector('.wikia-nav--logout form')
             .addEventListener('submit', (e) => {
                 e.preventDefault();
@@ -167,7 +157,7 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
     }
 
     _doLogout() {
-        return request(`${this.atts.mwBase}/logout`, { method: 'POST', mode: 'no-cors' })
+        return request(`${this.atts['mw-base']}/logout`, { method: 'POST', mode: 'no-cors' })
             .then(() => {
                 this._dispatchEvent(EVENTS.LOGOUT_SUCCESS);
                 this._initAnon();
@@ -176,7 +166,7 @@ export default class FandomGlobalHeaderMobile extends HTMLElement {
 
     // TODO: this duplicates desktop version
     _dispatchEvent(name, detail = {}) {
-        this.dispatchEvent(new CustomEvent(name, { detail }));
+        this.parent.dispatchEvent(new CustomEvent(name, { detail }));
     }
 
     _bindUserActions() {
