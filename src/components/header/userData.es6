@@ -8,7 +8,8 @@ export function fromNavResponse(json) {
 
     return {
         name,
-        avatar: data.header.url
+        avatar: data.header.url,
+        links: data.links
     }
 }
 

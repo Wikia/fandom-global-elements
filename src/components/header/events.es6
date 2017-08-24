@@ -19,5 +19,6 @@ export const EVENTS = {
     UNPIN_HEADROOM: 'unpin-headroom',
     MOBILE_NAV_TOGGLE: 'mobile-nav-toggle',
     MOBILE_SUBNAV_CLOSE: 'mobile-subnav-close',
-    MOBILE_SUBNAV_OPEN: 'mobile-subnav-open'
+    MOBILE_SUBNAV_OPEN: 'mobile-subnav-open',
+    USER_DATA_REFRESHED: 'user-data-refreshed'
 };

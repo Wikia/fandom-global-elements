@@ -10,39 +10,24 @@ import { ATTRIBUTES } from '../../helpers/AttributeHelper.es6';
 import { EVENTS } from './events.es6';
 
 export default class FandomGlobalHeaderMobile {
-    constructor(el, parent, data) {
+    constructor(el, parent) {
         this.el = el;
         this.parent = parent;
-        this.mwData = data.mwData;
-        this.atts = data.attributes;
+        this.atts = this.parent.data.attributes;
         this.strings = getStrings(this.atts['lang-code']);
         this.svgs = new SvgHelper(this.el);
     }
 
     init() {
-        this.userData = validateUserData(this.atts[ATTRIBUTES.USER_DATA]) ||
-            fromNavResponse(this.mwData);
         this._draw();
 
-        this._onEvent(EVENTS.AUTH_SUCCESS, () => this._refreshUserData());
-        this._onEvent(EVENTS.LOGOUT_SUCCESS, () => this._refreshUserData());
+        this.parent.onEvent(EVENTS.USER_DATA_REFRESHED, () => this._updateUserState());
 
         return this;
     }
 
-    // TODO: duplicates desktop
-    _refreshUserData() {
-        requestNavInfo(this.atts['mw-base'], this.atts['lang-code'])
-            .then(json => this._updateUserData(fromNavResponse(json)));
-    }
-
-    _updateUserData(data) {
-        this.userData = data;
-        this._updateUserState();
-    }
-
     _updateUserState() {
-        if (this.userData) {
+        if (this.parent.userData) {
             this._initUser();
         } else {
             this._initAnon();
@@ -67,7 +52,7 @@ export default class FandomGlobalHeaderMobile {
         });
 
         container.querySelector('.wikia-nav__join').addEventListener('click', () => {
-            if (this._dispatchEvent(EVENTS.CLICK_JOIN)) {
+            if (this.parent.triggerEvent(EVENTS.CLICK_JOIN)) {
                 window.location.href = `${this.atts['mw-base']}/join?redirect=${encodeURIComponent(window.location.href)}`
             }
         });
@@ -77,14 +62,14 @@ export default class FandomGlobalHeaderMobile {
 
     // TODO: init user when desktop successfully logs you in
     _initUser() {
-        const userLinks = this.mwData.user && this.mwData.user.links;
+        const userLinks = this.parent.data.mwData.user && this.parent.data.mwData.user.links;
         const container = this.el.querySelector('.wikia-nav__header'); // TODO: make constant
         const profileLink = getProfileLink(userLinks);
 
         container.innerHTML = userHeader({
             unreadCount: 0,
             strings: this.strings,
-            currentUser: this.userData,
+            currentUser: this.parent.userData,
             profileLink: profileLink ? profileLink.href : '#',
             logoutText: this.strings['global-navigation-user-sign-out']
         });
@@ -95,7 +80,7 @@ export default class FandomGlobalHeaderMobile {
     _initNavDrawer() {
         const navIconWrapper = this.el.querySelector('.site-head-icon-nav');
         navIconWrapper.addEventListener('click', () => {
-            if (this._dispatchEvent(EVENTS.MOBILE_NAV_TOGGLE)) {
+            if (this.parent.triggerEvent(EVENTS.MOBILE_NAV_TOGGLE)) {
                 this.el.querySelector('.side-nav-drawer').classList.toggle('collapsed');
                 navIconWrapper.querySelectorAll('svg').forEach((svg) => {
                     svg.classList.toggle('is-hidden');
@@ -110,8 +95,8 @@ export default class FandomGlobalHeaderMobile {
         this._updateUserState();
 
         const container = this.el.querySelector('.nav-menu');
-        const fandomLinks = this.mwData.fandom_overview.links; // TODO: turn MWData into it's own model?
-        const wikisLink = this.mwData.wikis.header;
+        const fandomLinks = this.parent.data.mwData.fandom_overview.links; // TODO: turn MWData into it's own model?
+        const wikisLink = this.parent.data.mwData.wikis.header;
 
         // TODO: cache these templates once they are rendered
         const fandomTemplates = fandomLinks.map((link) => {
@@ -131,8 +116,8 @@ export default class FandomGlobalHeaderMobile {
         container.innerHTML = `${fandomTemplates.join('')} ${wikisTemplate}`;
 
         container.querySelector('.nav-menu--explore').addEventListener('click', () => {
-            if (this._dispatchEvent(EVENTS.MOBILE_SUBNAV_OPEN)) {
-                this._initSubNav(this.strings['global-navigation-wikis-header'], this.mwData.wikis.links)
+            if (this.parent.triggerEvent(EVENTS.MOBILE_SUBNAV_OPEN)) {
+                this._initSubNav(this.strings['global-navigation-wikis-header'], this.parent.data.mwData.wikis.links)
             }
         });
     }
@@ -155,7 +140,7 @@ export default class FandomGlobalHeaderMobile {
         header.innerHTML = headerText;
 
         const killSubNav = () => {
-            if (this._dispatchEvent(EVENTS.MOBILE_SUBNAV_CLOSE)) {
+            if (this.parent.triggerEvent(EVENTS.MOBILE_SUBNAV_CLOSE)) {
                 header.removeEventListener('click', killSubNav);
                 header.classList.remove('wikia-nav__back');
                 this._initNavDrawerContent();
@@ -169,7 +154,7 @@ export default class FandomGlobalHeaderMobile {
         this.el
             .querySelector('.wikia-nav--logout form')
             .addEventListener('submit', (e) => {
-                if (this._dispatchEvent(EVENTS.SUBMIT_LOGOUT)) {
+                if (this.parent.triggerEvent(EVENTS.SUBMIT_LOGOUT)) {
                     e.preventDefault();
                     this._doLogout();
                 }
@@ -179,25 +164,7 @@ export default class FandomGlobalHeaderMobile {
     _doLogout() {
         return request(`${this.atts['mw-base']}/logout`, { method: 'POST', mode: 'no-cors' })
             .then(() => {
-                this._dispatchEvent(EVENTS.LOGOUT_SUCCESS);
+                this.parent.triggerEvent(EVENTS.LOGOUT_SUCCESS);
             });
-    }
-
-    // TODO: this duplicates desktop version
-    _dispatchEvent(name, detail = {}) {
-        return this.parent.dispatchEvent(new CustomEvent(name, { detail }));
-    }
-
-    // TODO: this duplicates desktop version
-    _onEvent(name, callback) {
-        return this.parent.addEventListener(name, () => callback());
-    }
-
-    _bindUserActions() {
-
-    }
-
-    _bindAnonActions() {
-
     }
 }

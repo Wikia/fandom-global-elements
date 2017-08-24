@@ -36,11 +36,10 @@ const HEADROOM_OPTIONS = {
 };
 
 export default class FandomGlobalHeader {
-    constructor(el, parent, data) {
+    constructor(el, parent) {
         this.el = el;
         this.parent = parent;
-        this.mwData = data.mwData;
-        this.atts = data.attributes;
+        this.atts = this.parent.data.attributes;
         this.popup = new PopupHelper((e) => this._onMessage(e));
         this.strings = getStrings(this.atts['lang-code']);
         this.headroom = null;
@@ -54,24 +53,14 @@ export default class FandomGlobalHeader {
             this._buildHeadroomOptions()
         );
 
-        this.userData = fromNavResponse(this.mwData);
-        this.userLinks = this.mwData.user && this.mwData.user.links;
         this._updateUserState();
         this._updateNavLinks();
 
         this._bindSearchActions();
 
-        this._onEvent(EVENTS.AUTH_SUCCESS, () => this._refreshUserData());
-        this._onEvent(EVENTS.LOGOUT_SUCCESS, () => this._refreshUserData());
+        this.parent.onEvent(EVENTS.USER_DATA_REFRESHED, () => this._updateUserState());
 
         return this;
-    }
-
-    _refreshUserData() {
-        requestNavInfo(this.atts['mw-base'], this.atts['lang-code']).then(json => {
-            this.userData = fromNavResponse(json);
-            this._updateUserState();
-        });
     }
 
     isVisible() {
@@ -82,22 +71,10 @@ export default class FandomGlobalHeader {
         return this.atts[ATTRIBUTES.HIDE_SEARCH];
     }
 
-    // TODO: this duplicates mobile version
-    _dispatchEvent(name, detail = {}) {
-        return this.parent.dispatchEvent(new CustomEvent(name, { detail }));
-    }
-
-    // TODO: this duplicates mobile version
-    _onEvent(name, callback) {
-        return this.parent.addEventListener(name, () => callback());
-    }
-
     _doLogout() {
         return request(`${this.atts['mw-base']}/logout`, { method: 'POST', mode: 'no-cors' })
             .then(() => {
-                if (this._dispatchEvent(EVENTS.LOGOUT_SUCCESS)) {
-                    this._refreshUserData();
-                }
+                this.parent.triggerEvent(EVENTS.LOGOUT_SUCCESS);
             });
     }
 
@@ -124,18 +101,18 @@ export default class FandomGlobalHeader {
                     classes.add(CSS_CLASSES.HEADROOM_PINNED);
                     classes.remove(CSS_CLASSES.HEADROOM_UNPINNED);
                 } else {
-                    this._dispatchEvent(EVENTS.UNPIN_HEADROOM);
+                    this.parent.triggerEvent(EVENTS.UNPIN_HEADROOM);
                 }
             },
             onPin: () => {
-                this._dispatchEvent(EVENTS.PIN_HEADROOM);
+                this.parent.triggerEvent(EVENTS.PIN_HEADROOM);
             }
         })
     }
 
     _bindAnonActions() {
         this.el.querySelector('.wds-global-navigation__account-menu .anon-sign-in').addEventListener('click', () => {
-            if (this._dispatchEvent(EVENTS.CLICK_SIGN_IN)) {
+            if (this.parent.triggerEvent(EVENTS.CLICK_SIGN_IN)) {
                 this.popup.open(`${this.atts['mw-base']}/signin`, {
                     modal: 1,
                     redirect: window.location.href
@@ -144,7 +121,7 @@ export default class FandomGlobalHeader {
         });
 
         this.el.querySelector('.wds-global-navigation__account-menu .anon-register').addEventListener('click', () => {
-            if (this._dispatchEvent(EVENTS.CLICK_REGISTER)) {
+            if (this.parent.triggerEvent(EVENTS.CLICK_REGISTER)) {
                 this.popup.open(`${this.atts['mw-base']}/register`, {
                     modal: 1,
                     redirect: window.location.href
@@ -154,13 +131,11 @@ export default class FandomGlobalHeader {
     }
 
     _bindUserActions() {
-        if (!this.userLinks) {
-            return;
-        }
+        const userLinks = (this.parent.userData && this.parent.userData.links) || [];
 
         const children = [];
 
-        for (const link of this.userLinks) {
+        for (const link of userLinks) {
             if (link.tracking_label === 'account.sign-out') {
                 continue;
             }
@@ -186,7 +161,7 @@ export default class FandomGlobalHeader {
         this.el
             .querySelector('.wds-global-navigation__user-menu .global-navigation-user-sign-out form')
             .addEventListener('submit', (e) => {
-                if (this._dispatchEvent(EVENTS.SUBMIT_LOGOUT)) {
+                if (this.parent.triggerEvent(EVENTS.SUBMIT_LOGOUT)) {
                     e.preventDefault();
                     this._doLogout();
                 }
@@ -209,7 +184,7 @@ export default class FandomGlobalHeader {
         };
 
         searchForm.addEventListener('submit', (e) => {
-            if (this._dispatchEvent(EVENTS.SUBMIT_SEARCH, { query: input.value })) {
+            if (this.parent.triggerEvent(EVENTS.SUBMIT_SEARCH, { query: input.value })) {
                 e.preventDefault();
             }
         });
@@ -229,13 +204,13 @@ export default class FandomGlobalHeader {
         const menu = this.el.querySelector('.user-menu');
         const startWiki = this.el.querySelector('.wds-global-navigation__start-a-wiki');
 
-        if (this.userData === null) {
+        if (this.parent.userData === null) {
             menu.innerHTML = anonUserMenu({ strings: this.strings });
             startWiki.classList.remove(CSS_CLASSES.USER_LOGGED_IN);
             this._bindAnonActions();
             this.headroom.destroy();
         } else {
-            menu.innerHTML = userMenu({ strings: this.strings, user: this.userData });
+            menu.innerHTML = userMenu({ strings: this.strings, user: this.parent.userData });
             startWiki.classList.add(CSS_CLASSES.USER_LOGGED_IN);
             this._bindUserActions();
             this.headroom.init();
@@ -245,7 +220,7 @@ export default class FandomGlobalHeader {
     }
 
     _updateNavLinks() {
-        const json = this.mwData;
+        const json = this.parent.data.mwData;
 
         this._updateLink(
             'a.wds-global-navigation__start-a-wiki-button',
@@ -300,7 +275,7 @@ export default class FandomGlobalHeader {
             }
 
             element.addEventListener('click', (e) => {
-                this._dispatchEvent(eventName, { href, originalEvent: e});
+                this.parent.triggerEvent(eventName, { href, originalEvent: e});
             })
         }
     }
@@ -313,8 +288,7 @@ export default class FandomGlobalHeader {
     }
 
     _onAuthSuccess() {
-        if (this._dispatchEvent(EVENTS.AUTH_SUCCESS)) {
-            this._refreshUserData();
+        if (this.parent.triggerEvent(EVENTS.AUTH_SUCCESS)) {
             this.popup.close();
         }
     }
