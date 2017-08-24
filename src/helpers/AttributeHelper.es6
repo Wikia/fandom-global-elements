@@ -1,4 +1,5 @@
 
+// TODO: make keys into constants or do some other conversion so we don't have to access atts with dashes
 const defaultAttributes = {
     'mw-base': 'http://www.wikia.com',
     'services-base': 'https://services.wikia.com',

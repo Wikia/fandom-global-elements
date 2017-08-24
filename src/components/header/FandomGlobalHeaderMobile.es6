@@ -16,10 +16,10 @@ export default class FandomGlobalHeaderMobile {
         this.mwData = data.mwData;
         this.atts = data.attributes;
         this.strings = getStrings(this.atts['lang-code']);
+        this.svgs = new SvgHelper(this.el);
     }
 
     init() {
-        this.svgs = new SvgHelper(this.el);
         this.userData = validateUserData(this.atts[ATTRIBUTES.USER_DATA]) ||
             fromNavResponse(this.mwData);
         this._draw();
@@ -37,9 +37,16 @@ export default class FandomGlobalHeaderMobile {
 
     _initAnon() {
         const container = this.el.querySelector('.wikia-nav__header');
-        // TODO: unbind on init user event
-        container.addEventListener('click', () => {
-            window.location.href = `${this.atts['mw-base']}/join?redirect=${encodeURIComponent(window.location.href)}`
+
+        const onJoinClick = () => {
+            if (this._dispatchEvent(EVENTS.CLICK_JOIN)) {
+                window.location.href = `${this.atts['mw-base']}/join?redirect=${encodeURIComponent(window.location.href)}`
+            }
+        };
+        container.addEventListener('click', onJoinClick);
+
+        this._onEvent(EVENTS.MOBILE_SUBNAV_OPEN, () => {
+            container.removeEventListener('click', onJoinClick);
         });
 
         container.innerHTML = anonHeader({
@@ -48,8 +55,6 @@ export default class FandomGlobalHeaderMobile {
         });
 
         this.svgs.overwrite();
-
-        // TODO: add event
     }
 
     // TODO: init user when desktop successfully logs you in
@@ -120,6 +125,9 @@ export default class FandomGlobalHeaderMobile {
     }
 
     _initSubNav(headerText, links) {
+        if (!this._dispatchEvent(EVENTS.MOBILE_SUBNAV_OPEN)) {
+            return;
+        }
         const header = this.el.querySelector('.wikia-nav__header'); // TODO: cache element
         const nav = this.el.querySelector('.nav-menu');
 
@@ -137,36 +145,44 @@ export default class FandomGlobalHeaderMobile {
         header.innerHTML = headerText;
 
         const killSubNav = () => {
-            header.removeEventListener('click', killSubNav);
-            header.classList.remove('wikia-nav__back');
-            this._initNavDrawerContent();
-            // TODO: add event
+            if (this._dispatchEvent(EVENTS.MOBILE_SUBNAV_CLOSE)) {
+                header.removeEventListener('click', killSubNav);
+                header.classList.remove('wikia-nav__back');
+                this._initNavDrawerContent();
+            }
         };
         header.addEventListener('click', killSubNav);
-        // TODO: add event
+
     }
 
     _bindLogout() {
         this.el
             .querySelector('.wikia-nav--logout form')
             .addEventListener('submit', (e) => {
-                e.preventDefault();
-                this._dispatchEvent(EVENTS.SUBMIT_LOGOUT);
-                this._doLogout();
+                if (this._dispatchEvent(EVENTS.SUBMIT_LOGOUT)) {
+                    e.preventDefault();
+                    this._doLogout();
+                }
             })
     }
 
     _doLogout() {
         return request(`${this.atts['mw-base']}/logout`, { method: 'POST', mode: 'no-cors' })
             .then(() => {
-                this._dispatchEvent(EVENTS.LOGOUT_SUCCESS);
-                this._initAnon();
+                if (this._dispatchEvent(EVENTS.LOGOUT_SUCCESS)) {
+                    this._initAnon();
+                }
             });
     }
 
     // TODO: this duplicates desktop version
     _dispatchEvent(name, detail = {}) {
-        this.parent.dispatchEvent(new CustomEvent(name, { detail }));
+        return this.parent.dispatchEvent(new CustomEvent(name, { detail }));
+    }
+
+    // TODO: this duplicates desktop version
+    _onEvent(name, callback) {
+        return this.parent.addEventListener(name, callback);
     }
 
     _bindUserActions() {

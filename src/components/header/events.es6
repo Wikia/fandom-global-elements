@@ -4,6 +4,7 @@ export const EVENTS = {
     CLICK_LOGO: 'click-logo',
     CLICK_REGISTER: 'click-register',
     CLICK_SIGN_IN: 'click-sign-in',
+    CLICK_JOIN: 'click-join',
     CLICK_VERTICAL_GAMES: 'click-vertical-games',
     CLICK_VERTICAL_MOVIES: 'click-vertical-movies',
     CLICK_VERTICAL_TV: 'click-vertical-tv',
@@ -15,5 +16,7 @@ export const EVENTS = {
     PIN_HEADROOM: 'pin-headroom',
     SUBMIT_LOGOUT: 'submit-logout',
     SUBMIT_SEARCH: 'submit-search',
-    UNPIN_HEADROOM: 'unpin-headroom'
+    UNPIN_HEADROOM: 'unpin-headroom',
+    MOBILE_SUBNAV_CLOSE: 'mobile-subnav-close',
+    MOBILE_SUBNAV_OPEN: 'mobile-subnav-open'
 };

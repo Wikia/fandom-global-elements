@@ -47,11 +47,10 @@ export default class FandomGlobalHeader {
         this.popup = new PopupHelper((e) => this._onMessage(e));
         this.strings = getStrings(this.atts['lang-code']);
         this.headroom = null;
+        this.svgs = new SvgHelper(this.el);
     }
 
     init() {
-        this.svgs = new SvgHelper(this.el);
-
         this._draw();
         this.headroom = new Headroom(
             this.el.querySelector(headroomElementSelector),
@@ -91,14 +90,19 @@ export default class FandomGlobalHeader {
     }
 
     _dispatchEvent(name, detail = {}) {
-        this.parent.dispatchEvent(new CustomEvent(name, { detail }));
+        return this.parent.dispatchEvent(new CustomEvent(name, { detail }));
+    }
+
+    _onEvent(name, callback) {
+        return this.parent.addEventListener(name, callback);
     }
 
     _doLogout() {
         return request(`${this.atts['mw-base']}/logout`, { method: 'POST', mode: 'no-cors' })
             .then(() => {
-                this._dispatchEvent(EVENTS.LOGOUT_SUCCESS);
-                this.refreshUserData();
+                if (this._dispatchEvent(EVENTS.LOGOUT_SUCCESS)) {
+                    this.refreshUserData();
+                }
             });
     }
 
@@ -136,19 +140,21 @@ export default class FandomGlobalHeader {
 
     _bindAnonActions() {
         this.el.querySelector('.wds-global-navigation__account-menu .anon-sign-in').addEventListener('click', () => {
-            this._dispatchEvent(EVENTS.CLICK_SIGN_IN);
-            this.popup.open(`${this.atts['mw-base']}/signin`, {
-                modal: 1,
-                redirect: window.location.href
-            });
+            if (this._dispatchEvent(EVENTS.CLICK_SIGN_IN)) {
+                this.popup.open(`${this.atts['mw-base']}/signin`, {
+                    modal: 1,
+                    redirect: window.location.href
+                });
+            }
         });
 
         this.el.querySelector('.wds-global-navigation__account-menu .anon-register').addEventListener('click', () => {
-            this._dispatchEvent(EVENTS.CLICK_REGISTER);
-            this.popup.open(`${this.atts['mw-base']}/register`, {
-                modal: 1,
-                redirect: window.location.href
-            });
+            if (this._dispatchEvent(EVENTS.CLICK_REGISTER)) {
+                this.popup.open(`${this.atts['mw-base']}/register`, {
+                    modal: 1,
+                    redirect: window.location.href
+                });
+            }
         });
     }
 
@@ -181,9 +187,10 @@ export default class FandomGlobalHeader {
         this.el
             .querySelector('.wds-global-navigation__user-menu .global-navigation-user-sign-out form')
             .addEventListener('submit', (e) => {
-                e.preventDefault();
-                this._dispatchEvent(EVENTS.SUBMIT_LOGOUT);
-                this._doLogout();
+                if (this._dispatchEvent(EVENTS.SUBMIT_LOGOUT)) {
+                    e.preventDefault();
+                    this._doLogout();
+                }
             })
     }
 
@@ -203,8 +210,9 @@ export default class FandomGlobalHeader {
         };
 
         searchForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            this._dispatchEvent(EVENTS.SUBMIT_SEARCH, { query: input.value });
+            if (this._dispatchEvent(EVENTS.SUBMIT_SEARCH, { query: input.value })) {
+                e.preventDefault();
+            }
         });
 
         input.addEventListener('focus', () => {
@@ -304,8 +312,9 @@ export default class FandomGlobalHeader {
     }
 
     _onAuthSuccess() {
-        this._dispatchEvent(EVENTS.AUTH_SUCCESS);
-        this.refreshUserData();
-        this.popup.close();
+        if (this._dispatchEvent(EVENTS.AUTH_SUCCESS)) {
+            this.refreshUserData();
+            this.popup.close();
+        }
     }
 }
