@@ -11,22 +11,19 @@ import designSystemStyle from 'design-system/dist/css/styles.css';
 
 export default class FandomGlobalHeader extends HTMLElement {
     connectedCallback() {
-        this.atts = new AttributeHelper(this).getAllAttributes();
+        this.atts = new AttributeHelper(this);
         this.rootElement = this.attachShadow({ mode: 'open' });
-        this.data = null;
+        this.mwData = null;
         this.userData = null;
 
         this.onEvent(EVENTS.AUTH_SUCCESS, () => this.refreshUserData());
         this.onEvent(EVENTS.LOGOUT_SUCCESS, () => this.refreshUserData());
 
-        requestNavInfo(this.atts['mw-base'], this.atts['lang-code'])
+        requestNavInfo(this.atts.mwBase, this.atts.langCode)
             .then((mwData) => {
-                this.data = Object.assign({}, {
-                    mwData,
-                    attributes: this.atts
-                });
-
+                this.mwData = mwData;
                 this.userData = fromNavResponse(mwData);
+
                 this._createDesktopHeader();
                 this._createMobileHeader();
                 this._draw();
@@ -42,16 +39,16 @@ export default class FandomGlobalHeader extends HTMLElement {
     }
 
     refreshUserData() {
-        return requestNavInfo(this.atts['mw-base'], this.atts['lang-code'])
+        return requestNavInfo(this.atts.mwBase, this.atts.langCode)
             .then(json => {
                 this.userData = fromNavResponse(json);
-                this.data.mwData.user = this.userData;
+                this.mwData.user = this.userData;
                 this.triggerEvent(EVENTS.USER_DATA_REFRESHED)
             });
     }
 
     isSearchHidden() {
-        return AttributeHelper.getAsBool(this.atts[ATTRIBUTES.HIDE_SEARCH]);
+        return this.atts.getAsBool(this.atts[ATTRIBUTES.HIDE_SEARCH]);
     }
 
     _createDesktopHeader() {
@@ -60,7 +57,7 @@ export default class FandomGlobalHeader extends HTMLElement {
         this.desktopHeader = new FandomGlobalHeaderDesktop(element, this);
     }
 
-    _createMobileHeader(data) {
+    _createMobileHeader() {
         const element = document.createElement('div');
         element.id = 'fandom-global-header-mobile';
         this.mobileHeader = new FandomGlobalHeaderMobile(element, this);

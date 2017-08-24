@@ -3,18 +3,17 @@ import anonHeader from './templates/mobile/anon-header.handlebars';
 import userHeader from './templates/mobile/user-header.handlebars';
 import navMenuItem from './templates/mobile/nav-menu-item.handlebars';
 import SvgHelper from '../../helpers/svg/SvgHelper.es6';
-import { fromNavResponse, validateUserData, getProfileLink } from './userData.es6';
+import { getProfileLink } from './userData.es6';
 import getStrings from '../../getStrings.es6';
 import { request, requestNavInfo } from './services.es6';
-import { ATTRIBUTES } from '../../helpers/AttributeHelper.es6';
 import { EVENTS } from './events.es6';
 
 export default class FandomGlobalHeaderMobile {
     constructor(el, parent) {
         this.el = el;
         this.parent = parent;
-        this.atts = this.parent.data.attributes;
-        this.strings = getStrings(this.atts['lang-code']);
+        this.atts = this.parent.atts;
+        this.strings = getStrings(this.atts.langCode);
         this.svgs = new SvgHelper(this.el);
     }
 
@@ -55,7 +54,7 @@ export default class FandomGlobalHeaderMobile {
 
         container.querySelector('.wikia-nav__join').addEventListener('click', () => {
             if (this.parent.triggerEvent(EVENTS.CLICK_JOIN)) {
-                window.location.href = `${this.atts['mw-base']}/join?redirect=${encodeURIComponent(window.location.href)}`
+                window.location.href = `${this.atts.mwBase}/join?redirect=${encodeURIComponent(window.location.href)}`
             }
         });
 
@@ -63,7 +62,7 @@ export default class FandomGlobalHeaderMobile {
     }
 
     _initUser() {
-        const userLinks = this.parent.data.mwData.user && this.parent.data.mwData.user.links;
+        const userLinks = this.parent.mwData.user && this.parent.mwData.user.links;
         const container = this.el.querySelector('.wikia-nav__header');
         const profileLink = getProfileLink(userLinks);
 
@@ -101,7 +100,7 @@ export default class FandomGlobalHeaderMobile {
 
         container.querySelector('.nav-menu--explore').addEventListener('click', () => {
             if (this.parent.triggerEvent(EVENTS.MOBILE_SUBNAV_OPEN)) {
-                this._initSubNav(this.strings['global-navigation-wikis-header'], this.parent.data.mwData.wikis.links)
+                this._initSubNav(this.strings['global-navigation-wikis-header'], this.parent.mwData.wikis.links)
             }
         });
     }
@@ -111,7 +110,7 @@ export default class FandomGlobalHeaderMobile {
             return this.fandomNavLinks;
         }
 
-        const fandomLinks = this.parent.data.mwData.fandom_overview.links;
+        const fandomLinks = this.parent.mwData.fandom_overview.links;
         const fandomTemplates = fandomLinks.map((link) => {
             return navMenuItem({
                 className: `nav-menu--external nav-menu--${link.brand}`,
@@ -130,7 +129,7 @@ export default class FandomGlobalHeaderMobile {
             return this.wikisNavLink;
         }
 
-        const wikisLink = this.parent.data.mwData.wikis.header;
+        const wikisLink = this.parent.mwData.wikis.header;
         this.wikisNavLink = navMenuItem({
             className: 'nav-menu--root nav-menu--explore',
             name: this.strings[wikisLink.title.key]
@@ -179,7 +178,7 @@ export default class FandomGlobalHeaderMobile {
     }
 
     _doLogout() {
-        return request(`${this.atts['mw-base']}/logout`, { method: 'POST', mode: 'no-cors' })
+        return request(`${this.atts.mwBase}/logout`, { method: 'POST', mode: 'no-cors' })
             .then(() => {
                 this.parent.triggerEvent(EVENTS.LOGOUT_SUCCESS);
             });

@@ -12,11 +12,11 @@ import designSystemStyle from 'design-system/dist/css/styles.css';
 export default class FandomGlobalFooter extends HTMLElement {
     connectedCallback() {
         this.rootElement = this.attachShadow({ mode: 'open' });
-        this.atts = new AttributeHelper(this).getAllAttributes();
+        this.atts = new AttributeHelper(this);
         this.svgs = new SvgHelper(this.rootElement);
-        this.strings = getStrings(this.atts['lang-code']);
+        this.strings = getStrings(this.atts.langCode);
 
-        fetch(`${this.atts['mw-base']}/api/v1/design-system/wikis/${this.atts['city-id']}/${this.atts['lang-code']}/global-footer`, { credentials: 'include' })
+        fetch(`${this.atts.mwBase}/api/v1/design-system/wikis/${this.atts.cityId}/${this.atts.langCode}/global-footer`, { credentials: 'include' })
             .then((response) => response.json())
             .then((footer) => this._draw(footer))
             .catch((error) => console.log('error fetching footer ', error));
@@ -30,7 +30,7 @@ export default class FandomGlobalFooter extends HTMLElement {
         const content = footerTemplate({
             i18n: this.strings,
             model: footer,
-            communityName: this.atts['community-name'],
+            communityName: this.atts.communityName,
             vertical: this.atts.vertical
         });
 

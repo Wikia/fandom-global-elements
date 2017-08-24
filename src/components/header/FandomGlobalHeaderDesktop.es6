@@ -4,13 +4,11 @@ import anonUserMenu from './templates/desktop/anon.handlebars';
 import userMenu from './templates/desktop/user.handlebars';
 import userLink from './templates/desktop/userLink.handlebars';
 import userMenuLogout from './templates/desktop/userMenuLogout.handlebars';
-import { ATTRIBUTES } from '../../helpers/AttributeHelper.es6';
 import SvgHelper from '../../helpers/svg/SvgHelper.es6';
 import PopupHelper  from '../../helpers/PopupHelper.es6';
 import getStrings from '../../getStrings.es6';
 import { EVENTS } from './events.es6';
-import { fromNavResponse, validateUserData } from './userData.es6';
-import { request, requestNavInfo } from './services.es6';
+import { request } from './services.es6';
 
 const headroomElementSelector = 'header.wds-global-navigation';
 
@@ -39,9 +37,9 @@ export default class FandomGlobalHeader {
     constructor(el, parent) {
         this.el = el;
         this.parent = parent;
-        this.atts = this.parent.data.attributes;
+        this.atts = this.parent.atts;
         this.popup = new PopupHelper((e) => this._onMessage(e));
-        this.strings = getStrings(this.atts['lang-code']);
+        this.strings = getStrings(this.atts.langCode);
         this.headroom = null;
         this.svgs = new SvgHelper(this.el);
     }
@@ -68,7 +66,7 @@ export default class FandomGlobalHeader {
     }
 
     _doLogout() {
-        return request(`${this.atts['mw-base']}/logout`, { method: 'POST', mode: 'no-cors' })
+        return request(`${this.atts.mwBase}/logout`, { method: 'POST', mode: 'no-cors' })
             .then(() => {
                 this.parent.triggerEvent(EVENTS.LOGOUT_SUCCESS);
             });
@@ -109,7 +107,7 @@ export default class FandomGlobalHeader {
     _bindAnonActions() {
         this.el.querySelector('.wds-global-navigation__account-menu .anon-sign-in').addEventListener('click', () => {
             if (this.parent.triggerEvent(EVENTS.CLICK_SIGN_IN)) {
-                this.popup.open(`${this.atts['mw-base']}/signin`, {
+                this.popup.open(`${this.atts.mwBase}/signin`, {
                     modal: 1,
                     redirect: window.location.href
                 });
@@ -118,7 +116,7 @@ export default class FandomGlobalHeader {
 
         this.el.querySelector('.wds-global-navigation__account-menu .anon-register').addEventListener('click', () => {
             if (this.parent.triggerEvent(EVENTS.CLICK_REGISTER)) {
-                this.popup.open(`${this.atts['mw-base']}/register`, {
+                this.popup.open(`${this.atts.mwBase}/register`, {
                     modal: 1,
                     redirect: window.location.href
                 });
@@ -216,7 +214,7 @@ export default class FandomGlobalHeader {
     }
 
     _updateNavLinks() {
-        const json = this.parent.data.mwData;
+        const json = this.parent.mwData;
 
         this._updateLink(
             'a.wds-global-navigation__start-a-wiki-button',
