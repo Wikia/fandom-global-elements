@@ -33,4 +33,8 @@ export default class AttributeHelper {
 
         return Object.assign({}, defaultAttributes, attrObj);
     }
+
+    static getAsBool = (attribute) => {
+        return attribute.toLowerCase() === 'true';
+    }
 }

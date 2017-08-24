@@ -50,6 +50,10 @@ export default class FandomGlobalHeader extends HTMLElement {
             });
     }
 
+    isSearchHidden() {
+        return AttributeHelper.getAsBool(this.atts[ATTRIBUTES.HIDE_SEARCH]);
+    }
+
     _createDesktopHeader() {
         const element = document.createElement('div');
         element.id = 'fandom-global-header-desktop';

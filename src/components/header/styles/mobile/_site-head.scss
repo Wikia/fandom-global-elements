@@ -48,6 +48,10 @@
 		width: $icon-button-size;
 	}
 
+	.hidden-search {
+		visibility: hidden;
+	}
+
 	.site-logo {
 		// These prevent the Wikia logo element from taking up more vertical
 		// space than it should, potentially affecting placement of elements

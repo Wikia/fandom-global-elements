@@ -67,10 +67,6 @@ export default class FandomGlobalHeader {
         return !this.el.querySelector(headroomElementSelector).classList.contains(CSS_CLASSES.HEADROOM_UNPINNED);
     }
 
-    _isSearchHidden() {
-        return this.atts[ATTRIBUTES.HIDE_SEARCH];
-    }
-
     _doLogout() {
         return request(`${this.atts['mw-base']}/logout`, { method: 'POST', mode: 'no-cors' })
             .then(() => {
@@ -81,7 +77,7 @@ export default class FandomGlobalHeader {
     _draw() {
         this.el.innerHTML = headerTemplate({
             strings: this.strings,
-            searchHidden: this._isSearchHidden()
+            searchHidden: this.parent.isSearchHidden()
         });
 
         this.svgs.addSvgs();
@@ -169,7 +165,7 @@ export default class FandomGlobalHeader {
     }
 
     _bindSearchActions() {
-        if (this._isSearchHidden()) {
+        if (this.parent.isSearchHidden()) {
             return;
         }
 
