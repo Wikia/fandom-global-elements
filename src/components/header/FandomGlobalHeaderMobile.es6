@@ -5,7 +5,7 @@ import navMenuItem from './templates/mobile/nav-menu-item.handlebars';
 import SvgHelper from '../../helpers/svg/SvgHelper.es6';
 import { fromNavResponse, validateUserData, getProfileLink } from './userData.es6';
 import getStrings from '../../getStrings.es6';
-import { request } from './services.es6';
+import { request, requestNavInfo } from './services.es6';
 import { ATTRIBUTES } from '../../helpers/AttributeHelper.es6';
 import { EVENTS } from './events.es6';
 
@@ -23,7 +23,30 @@ export default class FandomGlobalHeaderMobile {
         this.userData = validateUserData(this.atts[ATTRIBUTES.USER_DATA]) ||
             fromNavResponse(this.mwData);
         this._draw();
+
+        this._onEvent(EVENTS.AUTH_SUCCESS, () => this._refreshUserData());
+        this._onEvent(EVENTS.LOGOUT_SUCCESS, () => this._refreshUserData());
+
         return this;
+    }
+
+    // TODO: duplicates desktop
+    _refreshUserData() {
+        requestNavInfo(this.atts['mw-base'], this.atts['lang-code'])
+            .then(json => this._updateUserData(fromNavResponse(json)));
+    }
+
+    _updateUserData(data) {
+        this.userData = data;
+        this._updateUserState();
+    }
+
+    _updateUserState() {
+        if (this.userData) {
+            this._initUser();
+        } else {
+            this._initAnon();
+        }
     }
 
     _draw() {
@@ -38,20 +61,15 @@ export default class FandomGlobalHeaderMobile {
     _initAnon() {
         const container = this.el.querySelector('.wikia-nav__header');
 
-        const onJoinClick = () => {
-            if (this._dispatchEvent(EVENTS.CLICK_JOIN)) {
-                window.location.href = `${this.atts['mw-base']}/join?redirect=${encodeURIComponent(window.location.href)}`
-            }
-        };
-        container.addEventListener('click', onJoinClick);
-
-        this._onEvent(EVENTS.MOBILE_SUBNAV_OPEN, () => {
-            container.removeEventListener('click', onJoinClick);
-        });
-
         container.innerHTML = anonHeader({
             loginText: this.strings['global-navigation-anon-sign-in'],
             registerText: this.strings['global-navigation-anon-register']
+        });
+
+        container.querySelector('.wikia-nav__join').addEventListener('click', () => {
+            if (this._dispatchEvent(EVENTS.CLICK_JOIN)) {
+                window.location.href = `${this.atts['mw-base']}/join?redirect=${encodeURIComponent(window.location.href)}`
+            }
         });
 
         this.svgs.overwrite();
@@ -72,29 +90,24 @@ export default class FandomGlobalHeaderMobile {
         });
 
         this._bindLogout();
-
-        // TODO: add event
     }
 
     _initNavDrawer() {
         const navIconWrapper = this.el.querySelector('.site-head-icon-nav');
         navIconWrapper.addEventListener('click', () => {
-            // TODO: Add event
-            this.el.querySelector('.side-nav-drawer').classList.toggle('collapsed');
-            navIconWrapper.querySelectorAll('svg').forEach((svg) => {
-                svg.classList.toggle('is-hidden');
-            })
+            if (this._dispatchEvent(EVENTS.MOBILE_NAV_TOGGLE)) {
+                this.el.querySelector('.side-nav-drawer').classList.toggle('collapsed');
+                navIconWrapper.querySelectorAll('svg').forEach((svg) => {
+                    svg.classList.toggle('is-hidden');
+                })
+            }
         });
 
         this._initNavDrawerContent();
     }
 
     _initNavDrawerContent() {
-        if (this.userData) {
-            this._initUser();
-        } else {
-            this._initAnon();
-        }
+        this._updateUserState();
 
         const container = this.el.querySelector('.nav-menu');
         const fandomLinks = this.mwData.fandom_overview.links; // TODO: turn MWData into it's own model?
@@ -118,16 +131,13 @@ export default class FandomGlobalHeaderMobile {
         container.innerHTML = `${fandomTemplates.join('')} ${wikisTemplate}`;
 
         container.querySelector('.nav-menu--explore').addEventListener('click', () => {
-            this._initSubNav(this.strings['global-navigation-wikis-header'], this.mwData.wikis.links)
+            if (this._dispatchEvent(EVENTS.MOBILE_SUBNAV_OPEN)) {
+                this._initSubNav(this.strings['global-navigation-wikis-header'], this.mwData.wikis.links)
+            }
         });
-
-        // TODO: add event
     }
 
     _initSubNav(headerText, links) {
-        if (!this._dispatchEvent(EVENTS.MOBILE_SUBNAV_OPEN)) {
-            return;
-        }
         const header = this.el.querySelector('.wikia-nav__header'); // TODO: cache element
         const nav = this.el.querySelector('.nav-menu');
 
@@ -169,9 +179,7 @@ export default class FandomGlobalHeaderMobile {
     _doLogout() {
         return request(`${this.atts['mw-base']}/logout`, { method: 'POST', mode: 'no-cors' })
             .then(() => {
-                if (this._dispatchEvent(EVENTS.LOGOUT_SUCCESS)) {
-                    this._initAnon();
-                }
+                this._dispatchEvent(EVENTS.LOGOUT_SUCCESS);
             });
     }
 
@@ -182,7 +190,7 @@ export default class FandomGlobalHeaderMobile {
 
     // TODO: this duplicates desktop version
     _onEvent(name, callback) {
-        return this.parent.addEventListener(name, callback);
+        return this.parent.addEventListener(name, () => callback());
     }
 
     _bindUserActions() {

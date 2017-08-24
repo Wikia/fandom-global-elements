@@ -17,6 +17,7 @@ export const EVENTS = {
     SUBMIT_LOGOUT: 'submit-logout',
     SUBMIT_SEARCH: 'submit-search',
     UNPIN_HEADROOM: 'unpin-headroom',
+    MOBILE_NAV_TOGGLE: 'mobile-nav-toggle',
     MOBILE_SUBNAV_CLOSE: 'mobile-subnav-close',
     MOBILE_SUBNAV_OPEN: 'mobile-subnav-open'
 };

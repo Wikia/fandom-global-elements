@@ -11,9 +11,6 @@ import getStrings from '../../getStrings.es6';
 import { EVENTS } from './events.es6';
 import { fromNavResponse, validateUserData } from './userData.es6';
 import { request, requestNavInfo } from './services.es6';
-import getOrCreateTemplate from '../../getOrCreateTemplate.es6';
-import designSystemStyle from 'design-system/dist/css/styles.css';
-import style from './styles-desktop.scss';
 
 const headroomElementSelector = 'header.wds-global-navigation';
 
@@ -57,28 +54,24 @@ export default class FandomGlobalHeader {
             this._buildHeadroomOptions()
         );
 
-        // TODO: test the use case of passing in user data
-        const userData = validateUserData(this.atts[ATTRIBUTES.USER_DATA]);
-        const userLinks = this.mwData.user && this.mwData.user.links;
-
-        if (userData) {
-            this._updateUserData(userData);
-
-            if (userLinks) {
-                this._bindUserActions(userLinks);
-            }
-        } else {
-            this._updateUserData(fromNavResponse(this.mwData), userLinks);
-            this._updateNavLinks(this.mwData);
-        }
+        this.userData = fromNavResponse(this.mwData);
+        this.userLinks = this.mwData.user && this.mwData.user.links;
+        this._updateUserState();
+        this._updateNavLinks();
 
         this._bindSearchActions();
+
+        this._onEvent(EVENTS.AUTH_SUCCESS, () => this._refreshUserData());
+        this._onEvent(EVENTS.LOGOUT_SUCCESS, () => this._refreshUserData());
 
         return this;
     }
 
-    refreshUserData() {
-        requestNavInfo(this.atts['mw-base'], this.atts['lang-code']).then(json => this._updateUserData(fromNavResponse(json)));
+    _refreshUserData() {
+        requestNavInfo(this.atts['mw-base'], this.atts['lang-code']).then(json => {
+            this.userData = fromNavResponse(json);
+            this._updateUserState();
+        });
     }
 
     isVisible() {
@@ -89,19 +82,21 @@ export default class FandomGlobalHeader {
         return this.atts[ATTRIBUTES.HIDE_SEARCH];
     }
 
+    // TODO: this duplicates mobile version
     _dispatchEvent(name, detail = {}) {
         return this.parent.dispatchEvent(new CustomEvent(name, { detail }));
     }
 
+    // TODO: this duplicates mobile version
     _onEvent(name, callback) {
-        return this.parent.addEventListener(name, callback);
+        return this.parent.addEventListener(name, () => callback());
     }
 
     _doLogout() {
         return request(`${this.atts['mw-base']}/logout`, { method: 'POST', mode: 'no-cors' })
             .then(() => {
                 if (this._dispatchEvent(EVENTS.LOGOUT_SUCCESS)) {
-                    this.refreshUserData();
+                    this._refreshUserData();
                 }
             });
     }
@@ -158,10 +153,14 @@ export default class FandomGlobalHeader {
         });
     }
 
-    _bindUserActions(enabledLinks) {
+    _bindUserActions() {
+        if (!this.userLinks) {
+            return;
+        }
+
         const children = [];
 
-        for (const link of enabledLinks) {
+        for (const link of this.userLinks) {
             if (link.tracking_label === 'account.sign-out') {
                 continue;
             }
@@ -226,26 +225,28 @@ export default class FandomGlobalHeader {
         });
     }
 
-    _updateUserData(userData = null, enabledLinks = []) {
+    _updateUserState() {
         const menu = this.el.querySelector('.user-menu');
         const startWiki = this.el.querySelector('.wds-global-navigation__start-a-wiki');
 
-        if (userData === null) {
+        if (this.userData === null) {
             menu.innerHTML = anonUserMenu({ strings: this.strings });
             startWiki.classList.remove(CSS_CLASSES.USER_LOGGED_IN);
             this._bindAnonActions();
             this.headroom.destroy();
         } else {
-            menu.innerHTML = userMenu({ strings: this.strings, user: userData });
+            menu.innerHTML = userMenu({ strings: this.strings, user: this.userData });
             startWiki.classList.add(CSS_CLASSES.USER_LOGGED_IN);
-            this._bindUserActions(enabledLinks);
+            this._bindUserActions();
             this.headroom.init();
         }
 
         this.svgs.overwrite();
     }
 
-    _updateNavLinks(json) {
+    _updateNavLinks() {
+        const json = this.mwData;
+
         this._updateLink(
             'a.wds-global-navigation__start-a-wiki-button',
             json.create_wiki.header.href,
@@ -313,7 +314,7 @@ export default class FandomGlobalHeader {
 
     _onAuthSuccess() {
         if (this._dispatchEvent(EVENTS.AUTH_SUCCESS)) {
-            this.refreshUserData();
+            this._refreshUserData();
             this.popup.close();
         }
     }
