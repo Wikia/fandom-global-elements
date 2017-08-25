@@ -42,6 +42,10 @@ export default class FandomGlobalHeaderMobile {
         this._initNavDrawer();
     }
 
+    isVisible() {
+        return this.isActive;
+    }
+
     _setActiveState(active = false) {
         if (active) {
             this.isActive = true;

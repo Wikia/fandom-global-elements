@@ -77,7 +77,10 @@ export default class FandomGlobalHeader {
     }
 
     isVisible() {
-        return !this.el.querySelector(headroomElementSelector).classList.contains(CSS_CLASSES.HEADROOM_UNPINNED);
+        return (
+            this.isActive &&
+            !this.el.querySelector(headroomElementSelector).classList.contains(CSS_CLASSES.HEADROOM_UNPINNED)
+        );
     }
 
     _setActiveState(active = false) {

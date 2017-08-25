@@ -52,6 +52,10 @@ export default class FandomGlobalHeader extends HTMLElement {
         return this.atts.getAsBool(this.atts[ATTRIBUTES.HIDE_SEARCH]);
     }
 
+    isVisible() {
+        return this.mobileHeader.isVisible() || this.desktopHeader.isVisible();
+    }
+
     _bindEvents() {
         this.onEvent(EVENTS.AUTH_SUCCESS, () => this.refreshUserData());
         this.onEvent(EVENTS.LOGOUT_SUCCESS, () => this.refreshUserData());
