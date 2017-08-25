@@ -35,8 +35,12 @@ export default class FandomGlobalHeaderMobile {
 
     _draw() {
         this.el.innerHTML = headerTemplate({
-            searchHidden: this.parent.isSearchHidden()
+            searchHidden: this.parent.isSearchHidden(),
+            wikiaHomepage: this.parent.mwData.logo.header.href
         });
+
+        this.el.querySelector('.site-logo a, .site-head-fandom-bar a')
+            .addEventListener('click', () => this.parent.triggerEvent(EVENTS.CLICK_LOGO));
 
         this._initNavDrawer();
 
@@ -79,7 +83,9 @@ export default class FandomGlobalHeaderMobile {
 
     _initNavDrawer() {
         const navIconWrapper = this.el.querySelector('.site-head-icon-nav');
-        navIconWrapper.addEventListener('click', () => {
+        navIconWrapper.addEventListener('click', (event) => {
+            event.preventDefault();
+
             if (this.parent.triggerEvent(EVENTS.MOBILE_NAV_TOGGLE)) {
                 this.el.querySelector('.side-nav-drawer').classList.toggle('collapsed');
                 navIconWrapper.querySelectorAll('svg').forEach((svg) => {
@@ -88,15 +94,16 @@ export default class FandomGlobalHeaderMobile {
             }
         });
 
-        this._initNavDrawerContent();
+        this._updateNavDrawerContent();
     }
 
-    _initNavDrawerContent() {
+    _updateNavDrawerContent() {
         this._updateUserState();
 
         const container = this.el.querySelector('.nav-menu');
 
         container.innerHTML = `${this._getFandomNavLinks()} ${this._getWikisNavLink()}`;
+        this._bindNavClickEvents(container);
 
         container.querySelector('.nav-menu--explore').addEventListener('click', () => {
             if (this.parent.triggerEvent(EVENTS.MOBILE_SUBNAV_OPEN)) {
@@ -124,6 +131,30 @@ export default class FandomGlobalHeaderMobile {
         return this.fandomNavLinks;
     }
 
+    _bindNavClickEvents(container) {
+        const linkMap = {
+            'nav-menu--games': EVENTS.CLICK_VERTICAL_GAMES,
+            'nav-menu--movies': EVENTS.CLICK_VERTICAL_MOVIES,
+            'nav-menu--tv': EVENTS.CLICK_VERTICAL_TV,
+            'nav-menu--link-explore': EVENTS.CLICK_WIKIS_EXPLORE,
+            'nav-menu--link-community-central': EVENTS.CLICK_WIKIS_CENTRAL,
+            'nav-menu--link-fandom-university': EVENTS.CLICK_WIKIS_UNIVERSITY
+        };
+
+        container.querySelectorAll('a').forEach((anchor) => {
+            anchor.addEventListener('click', () => {
+                const classes = anchor.parentElement.className.split(' ');
+                classes.find((name) => {
+                    if (linkMap[name]) {
+                        this.parent.triggerEvent(linkMap[name]);
+                        return true;
+                    }
+                })
+            });
+        });
+
+    }
+
     _getWikisNavLink(force = false) {
         if (this.wikisNavLink && !force) {
             return this.wikisNavLink;
@@ -144,13 +175,14 @@ export default class FandomGlobalHeaderMobile {
 
         const linkTemplates = links.map((link) => {
             return navMenuItem({
-                className: '',
+                className: `nav-menu--${link.tracking_label.replace(/\./g, '-')}`,
                 href: link.href,
                 name: this.strings[link.title.key]
             });
         });
 
         nav.innerHTML = linkTemplates.join('');
+        this._bindNavClickEvents(nav);
 
         header.classList.add('wikia-nav__back');
         header.innerHTML = headerText;
@@ -159,7 +191,7 @@ export default class FandomGlobalHeaderMobile {
             if (this.parent.triggerEvent(EVENTS.MOBILE_SUBNAV_CLOSE)) {
                 header.removeEventListener('click', killSubNav);
                 header.classList.remove('wikia-nav__back');
-                this._initNavDrawerContent();
+                this._updateNavDrawerContent();
             }
         };
         header.addEventListener('click', killSubNav);

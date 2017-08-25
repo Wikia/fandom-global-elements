@@ -260,8 +260,8 @@ export default class FandomGlobalHeader {
 
     _updateLink(selectorOrElement, href, eventName) {
         const element = typeof selectorOrElement === 'string' ?
-                        this.el.querySelector(selectorOrElement) :
-                        selectorOrElement;
+            this.el.querySelector(selectorOrElement) :
+            selectorOrElement;
 
         if (element) {
             if (href) {
