@@ -95,6 +95,10 @@ $side-nav-back-svg: url(data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2224p
 			margin: 0;
 		}
 	}
+
+	.wikia-nav__join {
+		cursor: pointer;
+	}
 }
 
 .wikia-nav--in-root {
