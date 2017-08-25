@@ -5,7 +5,7 @@ import navMenuItem from './templates/mobile/nav-menu-item.handlebars';
 import SvgHelper from '../../helpers/svg/SvgHelper.es6';
 import { getProfileLink } from './userData.es6';
 import getStrings from '../../getStrings.es6';
-import { request, requestNavInfo } from './services.es6';
+import { request } from './services.es6';
 import { EVENTS } from './events.es6';
 
 export default class FandomGlobalHeaderMobile {
