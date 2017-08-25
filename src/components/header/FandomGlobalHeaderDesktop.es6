@@ -82,11 +82,7 @@ export default class FandomGlobalHeader {
     }
 
     _buildHeadroomOptions() {
-        const headerHeight = this.el.querySelector('.wds-global-navigation').offsetHeight;
-        this.el.querySelector('.wds-global-navigation__wrapper').style.height = `${headerHeight}px`;
-
         return Object.assign({}, HEADROOM_OPTIONS, {
-            offset: headerHeight,
             onUnpin: () => {
                 const activeSearch = this.el.querySelector(`.${CSS_CLASSES.SEARCH_ACTIVE}`);
                 if (activeSearch) {
