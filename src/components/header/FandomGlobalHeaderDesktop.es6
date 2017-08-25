@@ -44,8 +44,19 @@ export default class FandomGlobalHeader {
         this.svgs = new SvgHelper(this.el);
     }
 
+    draw() {
+        this.el.innerHTML = headerTemplate({
+            strings: this.strings,
+            searchHidden: this.parent.isSearchHidden()
+        });
+
+        this.svgs.addSvgs();
+        this.svgs.overwrite();
+
+        return this.el;
+    }
+
     init() {
-        this._draw();
         this.headroom = new Headroom(
             this.el.querySelector(headroomElementSelector),
             this._buildHeadroomOptions()
@@ -57,8 +68,6 @@ export default class FandomGlobalHeader {
         this._bindSearchActions();
 
         this.parent.onEvent(EVENTS.USER_DATA_REFRESHED, () => this._updateUserState());
-
-        return this;
     }
 
     isVisible() {
@@ -70,16 +79,6 @@ export default class FandomGlobalHeader {
             .then(() => {
                 this.parent.triggerEvent(EVENTS.LOGOUT_SUCCESS);
             });
-    }
-
-    _draw() {
-        this.el.innerHTML = headerTemplate({
-            strings: this.strings,
-            searchHidden: this.parent.isSearchHidden()
-        });
-
-        this.svgs.addSvgs();
-        this.svgs.overwrite();
     }
 
     _buildHeadroomOptions() {

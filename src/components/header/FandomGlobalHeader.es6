@@ -71,7 +71,10 @@ export default class FandomGlobalHeader extends HTMLElement {
         ShadyCSS.styleElement(this);
         this.rootElement.appendChild(document.importNode(template.content, true));
 
-        this.rootElement.appendChild(this.desktopHeader.init().el);
-        this.rootElement.appendChild(this.mobileHeader.init().el);
+        this.rootElement.appendChild(this.desktopHeader.draw());
+        this.rootElement.appendChild(this.mobileHeader.draw());
+
+        this.desktopHeader.init();
+        this.mobileHeader.init();
     }
 }

@@ -17,12 +17,23 @@ export default class FandomGlobalHeaderMobile {
         this.svgs = new SvgHelper(this.el);
     }
 
+    draw() {
+        this.el.innerHTML = headerTemplate({
+            searchHidden: this.parent.isSearchHidden(),
+            wikiaHomepage: this.parent.mwData.logo.header.href
+        });
+
+        this.svgs.addSvgs();
+        this.svgs.overwrite();
+
+        return this.el;
+    }
+
     init() {
-        this._draw();
+        this.el.querySelector('.site-logo a, .site-head-fandom-bar a')
+            .addEventListener('click', () => this.parent.triggerEvent(EVENTS.CLICK_LOGO));
 
-        this.parent.onEvent(EVENTS.USER_DATA_REFRESHED, () => this._updateUserState());
-
-        return this;
+        this._initNavDrawer();
     }
 
     _updateUserState() {
@@ -31,21 +42,6 @@ export default class FandomGlobalHeaderMobile {
         } else {
             this._initAnon();
         }
-    }
-
-    _draw() {
-        this.el.innerHTML = headerTemplate({
-            searchHidden: this.parent.isSearchHidden(),
-            wikiaHomepage: this.parent.mwData.logo.header.href
-        });
-
-        this.el.querySelector('.site-logo a, .site-head-fandom-bar a')
-            .addEventListener('click', () => this.parent.triggerEvent(EVENTS.CLICK_LOGO));
-
-        this._initNavDrawer();
-
-        this.svgs.addSvgs();
-        this.svgs.overwrite();
     }
 
     _initAnon() {
