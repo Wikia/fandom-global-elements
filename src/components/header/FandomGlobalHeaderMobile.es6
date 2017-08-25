@@ -36,26 +36,21 @@ export default class FandomGlobalHeaderMobile {
             .addEventListener('click', () => this.parent.triggerEvent(EVENTS.CLICK_LOGO));
 
         this.parent.onEvent(EVENTS.BREAKPOINT_CHANGED, (event) => {
-            if (event.detail.size && event.detail.size === BREAKPOINTS.MOBILE) {
-                this._setAsActive();
-            } else {
-                this._setAsInactive()
-            }
+            this._setActiveState(event.detail.size && event.detail.size === BREAKPOINTS.MOBILE);
         });
 
         this._initNavDrawer();
     }
 
-    _setAsActive() {
-        this.isActive = true;
-        this.el.classList.remove('is-hidden');
+    _setActiveState(active = false) {
+        if (active) {
+            this.isActive = true;
+            this.el.classList.remove('is-hidden');
+        } else {
+            this.isActive = false;
+            this.el.classList.add('is-hidden');
+        }
     }
-
-    _setAsInactive() {
-        this.isActive = false;
-        this.el.classList.add('is-hidden');
-    }
-
     _updateUserState() {
         if (this.parent.userData) {
             this._initUser();

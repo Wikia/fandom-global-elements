@@ -65,11 +65,7 @@ export default class FandomGlobalHeader {
         );
 
         this.parent.onEvent(EVENTS.BREAKPOINT_CHANGED, (event) => {
-            if (event.detail.size && event.detail.size === BREAKPOINTS.DESKTOP) {
-                this._setAsActive();
-            } else {
-                this._setAsInactive()
-            }
+            this._setActiveState(event.detail.size && event.detail.size === BREAKPOINTS.DESKTOP);
         });
 
         this._updateUserState();
@@ -84,16 +80,16 @@ export default class FandomGlobalHeader {
         return !this.el.querySelector(headroomElementSelector).classList.contains(CSS_CLASSES.HEADROOM_UNPINNED);
     }
 
-    _setAsActive() {
-        this.isActive = true;
-        this.el.classList.remove('is-hidden');
-        this.headroom.init();
-    }
-
-    _setAsInactive() {
-        this.isActive = false;
-        this.el.classList.add('is-hidden');
-        this.headroom.destroy();
+    _setActiveState(active = false) {
+        if (active) {
+            this.isActive = true;
+            this.el.classList.remove('is-hidden');
+            this.headroom.init();
+        } else {
+            this.isActive = false;
+            this.el.classList.add('is-hidden');
+            this.headroom.destroy();
+        }
     }
 
     _doLogout() {
