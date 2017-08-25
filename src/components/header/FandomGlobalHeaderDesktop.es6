@@ -84,7 +84,9 @@ export default class FandomGlobalHeader {
         if (active) {
             this.isActive = true;
             this.el.classList.remove('is-hidden');
-            this.headroom.init();
+            if (this._shouldInitHeadroom()) {
+                this.headroom.init();
+            }
         } else {
             this.isActive = false;
             this.el.classList.add('is-hidden');
@@ -220,10 +222,16 @@ export default class FandomGlobalHeader {
             menu.innerHTML = userMenu({ strings: this.strings, user: this.parent.userData });
             startWiki.classList.add(CSS_CLASSES.USER_LOGGED_IN);
             this._bindUserActions();
-            this.headroom.init();
+            if (this._shouldInitHeadroom()) {
+                this.headroom.init();
+            }
         }
 
         this.svgs.overwrite();
+    }
+
+    _shouldInitHeadroom() {
+        return this.isActive && this.parent.userData !== null;
     }
 
     _updateNavLinks() {
