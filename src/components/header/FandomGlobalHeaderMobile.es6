@@ -5,7 +5,7 @@ import navMenuItem from './templates/mobile/nav-menu-item.handlebars';
 import SvgHelper from '../../helpers/svg/SvgHelper.es6';
 import { getProfileLink } from './userData.es6';
 import getStrings from '../../getStrings.es6';
-import { BREAKPOINTS } from '../../helpers/breakpoints.es6';
+import { BREAKPOINTS } from '../../breakpoints.es6';
 import { request } from './services.es6';
 import { EVENTS } from './events.es6';
 

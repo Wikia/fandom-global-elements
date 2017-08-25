@@ -1,4 +1,4 @@
-import { BREAKPOINTS } from './breakpoints.es6';
+import { BREAKPOINTS } from '../breakpoints.es6';
 
 const defaultHideSearch = false;
 const defaultUserData = null;

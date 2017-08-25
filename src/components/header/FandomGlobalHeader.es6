@@ -3,7 +3,7 @@ import FandomGlobalHeaderDesktop from './FandomGlobalHeaderDesktop.es6';
 import FandomGlobalHeaderMobile from './FandomGlobalHeaderMobile.es6';
 import AttributeHelper, { ATTRIBUTES } from '../../helpers/AttributeHelper.es6';
 import { EVENTS } from './events.es6';
-import { BREAKPOINTS } from '../../helpers/breakpoints.es6';
+import { BREAKPOINTS } from '../../breakpoints.es6';
 import { fromNavResponse } from './userData.es6';
 import { requestNavInfo } from './services.es6';
 import getOrCreateTemplate from '../../getOrCreateTemplate.es6';

@@ -7,7 +7,7 @@ import userMenuLogout from './templates/desktop/userMenuLogout.handlebars';
 import SvgHelper from '../../helpers/svg/SvgHelper.es6';
 import PopupHelper from '../../helpers/PopupHelper.es6';
 import getStrings from '../../getStrings.es6';
-import { BREAKPOINTS } from '../../helpers/breakpoints.es6';
+import { BREAKPOINTS } from '../../breakpoints.es6';
 import { EVENTS } from './events.es6';
 import { request } from './services.es6';
 
@@ -87,11 +87,13 @@ export default class FandomGlobalHeader {
     _setAsActive() {
         this.isActive = true;
         this.el.classList.remove('is-hidden');
+        this.headroom.init();
     }
 
     _setAsInactive() {
         this.isActive = false;
         this.el.classList.add('is-hidden');
+        this.headroom.destroy();
     }
 
     _doLogout() {
