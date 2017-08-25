@@ -1,7 +1,9 @@
+import throttle from 'throttle-debounce/throttle';
 import FandomGlobalHeaderDesktop from './FandomGlobalHeaderDesktop.es6';
 import FandomGlobalHeaderMobile from './FandomGlobalHeaderMobile.es6';
 import AttributeHelper, { ATTRIBUTES } from '../../helpers/AttributeHelper.es6';
 import { EVENTS } from './events.es6';
+import { BREAKPOINTS } from '../../helpers/breakpoints.es6';
 import { fromNavResponse } from './userData.es6';
 import { requestNavInfo } from './services.es6';
 import getOrCreateTemplate from '../../getOrCreateTemplate.es6';
@@ -16,8 +18,7 @@ export default class FandomGlobalHeader extends HTMLElement {
         this.mwData = null;
         this.userData = null;
 
-        this.onEvent(EVENTS.AUTH_SUCCESS, () => this.refreshUserData());
-        this.onEvent(EVENTS.LOGOUT_SUCCESS, () => this.refreshUserData());
+        this._bindEvents();
 
         requestNavInfo(this.atts.mwBase, this.atts.langCode)
             .then((mwData) => {
@@ -35,7 +36,7 @@ export default class FandomGlobalHeader extends HTMLElement {
     }
 
     onEvent(name, callback) {
-        return this.addEventListener(name, () => callback());
+        return this.addEventListener(name, (...args) => callback(...args));
     }
 
     refreshUserData() {
@@ -49,6 +50,11 @@ export default class FandomGlobalHeader extends HTMLElement {
 
     isSearchHidden() {
         return this.atts.getAsBool(this.atts[ATTRIBUTES.HIDE_SEARCH]);
+    }
+
+    _bindEvents() {
+        this.onEvent(EVENTS.AUTH_SUCCESS, () => this.refreshUserData());
+        this.onEvent(EVENTS.LOGOUT_SUCCESS, () => this.refreshUserData());
     }
 
     _createDesktopHeader() {
@@ -76,5 +82,23 @@ export default class FandomGlobalHeader extends HTMLElement {
 
         this.desktopHeader.init();
         this.mobileHeader.init();
+
+        this._initActiveBreakpoint();
+    }
+
+    _initActiveBreakpoint() {
+        const getViewportSize = () => {
+            return window.innerWidth < this.atts.desktopBreakpoint ? BREAKPOINTS.MOBILE : BREAKPOINTS.DESKTOP;
+        };
+        let viewportSize = getViewportSize();
+        this.triggerEvent(EVENTS.BREAKPOINT_CHANGED, {size: viewportSize});
+
+        window.addEventListener('resize', throttle(100, () => {
+            let newViewportSize = getViewportSize();
+            if (newViewportSize != viewportSize) {
+                viewportSize = newViewportSize;
+                this.triggerEvent(EVENTS.BREAKPOINT_CHANGED, {size: newViewportSize});
+            }
+        }));
     }
 }

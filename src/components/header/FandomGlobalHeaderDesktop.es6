@@ -7,6 +7,7 @@ import userMenuLogout from './templates/desktop/userMenuLogout.handlebars';
 import SvgHelper from '../../helpers/svg/SvgHelper.es6';
 import PopupHelper from '../../helpers/PopupHelper.es6';
 import getStrings from '../../getStrings.es6';
+import { BREAKPOINTS } from '../../helpers/breakpoints.es6';
 import { EVENTS } from './events.es6';
 import { request } from './services.es6';
 
@@ -42,6 +43,7 @@ export default class FandomGlobalHeader {
         this.strings = getStrings(this.atts.langCode);
         this.headroom = null;
         this.svgs = new SvgHelper(this.el);
+        this.isActive = false;
     }
 
     draw() {
@@ -62,6 +64,14 @@ export default class FandomGlobalHeader {
             this._buildHeadroomOptions()
         );
 
+        this.parent.onEvent(EVENTS.BREAKPOINT_CHANGED, (event) => {
+            if (event.detail.size && event.detail.size === BREAKPOINTS.DESKTOP) {
+                this._setAsActive();
+            } else {
+                this._setAsInactive()
+            }
+        });
+
         this._updateUserState();
         this._updateNavLinks();
 
@@ -72,6 +82,16 @@ export default class FandomGlobalHeader {
 
     isVisible() {
         return !this.el.querySelector(headroomElementSelector).classList.contains(CSS_CLASSES.HEADROOM_UNPINNED);
+    }
+
+    _setAsActive() {
+        this.isActive = true;
+        this.el.classList.remove('is-hidden');
+    }
+
+    _setAsInactive() {
+        this.isActive = false;
+        this.el.classList.add('is-hidden');
     }
 
     _doLogout() {

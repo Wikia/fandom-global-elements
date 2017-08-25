@@ -1,3 +1,5 @@
+import { BREAKPOINTS } from './breakpoints.es6';
+
 const defaultHideSearch = false;
 const defaultUserData = null;
 const defaultMwBase = 'http://www.wikia.com';
@@ -6,6 +8,7 @@ const defaultLangCode = 'en';
 const defaultCityId = 177;
 const defaultCommunityName = null;
 const defaultVertical = 'Entertainment';
+const defaultDesktopBreakpoint = BREAKPOINTS.DESKTOP_WIDTH;
 
 export const ATTRIBUTES = {
     HIDE_SEARCH: 'hide-search',
@@ -16,6 +19,7 @@ export const ATTRIBUTES = {
     CITY_ID: 'city-id',
     COMMUNITY_NAME: 'community-name',
     VERTICAL: 'vertical',
+    DESKTOP_BREAKPOINT: 'desktop-breakpoint'
 };
 
 export default class AttributeHelper {
@@ -59,5 +63,9 @@ export default class AttributeHelper {
 
     get vertical() {
         return this.getAttribute('vertical', defaultVertical)
+    }
+
+    get desktopBreakpoint() {
+        return this.getAttribute('desktop-breakpoint', defaultDesktopBreakpoint);
     }
 }

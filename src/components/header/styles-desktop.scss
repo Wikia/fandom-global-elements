@@ -1,12 +1,12 @@
 @import '../../../node_modules/design-system/style-guide/styles/wds-variables/_breakpoints.scss';
 @import '../../../node_modules/design-system/style-guide/styles/wds-variables/index.scss';
 
+#fandom-global-header-desktop.is-hidden {
+  display: none;
+}
+
 .wds-global-navigation__wrapper {
   height: $wds-global-navigation-height;
-
-  @media #{$wds-breakpoint-s-only} {
-    display: none;
-  }
 
   .wds-global-navigation {
     font-family: sans-serif;

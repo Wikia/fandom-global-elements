@@ -20,5 +20,6 @@ export const EVENTS = {
     MOBILE_NAV_TOGGLE: 'mobile-nav-toggle',
     MOBILE_SUBNAV_CLOSE: 'mobile-subnav-close',
     MOBILE_SUBNAV_OPEN: 'mobile-subnav-open',
-    USER_DATA_REFRESHED: 'user-data-refreshed'
+    USER_DATA_REFRESHED: 'user-data-refreshed',
+    BREAKPOINT_CHANGED: 'breakpoint-changed'
 };

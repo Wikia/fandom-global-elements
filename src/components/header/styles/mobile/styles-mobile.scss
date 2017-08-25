@@ -8,10 +8,10 @@
 @import 'wikia-nav';
 @import 'nav-menu';
 
-.site-head-container, .side-nav-drawer {
+#fandom-global-header-mobile {
 	font-family: $wds-font-family;
 
-	@media #{$wds-breakpoint-m-up} {
+	&.is-hidden {
 		display: none;
 	}
 }
