@@ -1,0 +1,32 @@
+@import 'variables';
+
+.side-nav-drawer {
+	color: #fff;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 100%;
+	padding-top: $site-head-height;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: $z-site-head - 1;
+
+	&.collapsed {
+		display: none;
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	a:hover, a:focus {
+		color: inherit;
+	}
+}
+
+.side-nav-drawer__content {
+	display: flex;
+	flex-direction: column;
+	min-height: 100%;
+}

@@ -1,0 +1,17 @@
+@import '../../../../../node_modules/design-system/style-guide/styles/wds-variables/breakpoints';
+@import '../../../../../node_modules/design-system/style-guide/styles/wds-variables/_typography.scss';
+
+@import 'icon-button';
+@import 'site-head';
+@import 'site-head-fandom-bar';
+@import 'wikia-drawer';
+@import 'wikia-nav';
+@import 'nav-menu';
+
+#fandom-global-header-mobile {
+	font-family: $wds-font-family;
+
+	&.is-hidden {
+		display: none;
+	}
+}
