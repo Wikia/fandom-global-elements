@@ -2433,7 +2433,7 @@ var SvgHelper = function () {
                         (function () {
                             var newSvg = dictionarySvg.cloneNode(true);
                             newSvg.classList.remove(svgId);
-                            existingSvg.classList.forEach(function (c) {
+                            Array.from(existingSvg.classList).forEach(function (c) {
                                 return newSvg.classList.add(c);
                             });
                             updateDefs(newSvg);
