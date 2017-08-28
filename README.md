@@ -76,22 +76,21 @@ An example usage of `fandom-elements.js` can be seen in `index.html`.
 The header implements the spec defined in the [design system](http://fandomdesignsystem.com/#/identity/global-navigation) EXCEPT FOR:
 - search suggestions
 
+It also implements a mobile version based on the mobile wiki nav. The mobile version does not include: 
+- search interactions
+- notifications panel
+- wiki nav
+
 #### Attributes
 `<fandom-global-header>` accepts the following attributes:
 - `lang-code` - the current language code used for link internationalization. defaults to `en`
 - `mw-base` - base MediaWiki URL used to http requests. defaults to `http://www.wikia.com`
 - `services-base` - base services URL used to service http requests. defaults to `https://services.wikia.com`
 - `hide-search` - whether or not to hide the search input. defaults to `false`
-- `user-data` - json-serialized data representing the user. An http request to figure this out is made if it isn't provided. The object should be of the form: 
-```
-{
-    name: "...", // the user's name
-    avatar: "..." // the user's avatar image url
-}
 ```
 
 #### Events
-The header emits several events for user actions. These are defined in `FandomGlobalHeader.es6` and exported as `EVENTS.HEADER` by the module-type outputs. For all the link-type click events (on an `a` tag) the `event.detail.originalEvent` is passed to the listener so it's possible to prevent any link redirection. Example:
+The header emits several events for user actions. These are defined in `events.es6` and exported as `EVENTS.HEADER` by the module-type outputs. For all the link-type click events (on an `a` tag) the `event.detail.originalEvent` is passed to the listener so it's possible to prevent any link redirection. Example:
 
 ```
 <script>
@@ -106,6 +105,8 @@ document.addEventListener('WebComponentsReady', function() {
 ```
 
 would prevent the "Games" link in the header to redirect to the intended page.
+
+Alternatively, you can return `false` from any event handler function and the web component's default behavior will be prevented. 
 
 ### Footer
 
