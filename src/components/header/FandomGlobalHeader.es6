@@ -32,7 +32,7 @@ export default class FandomGlobalHeader extends HTMLElement {
     }
 
     triggerEvent(name, detail = {}) {
-        return this.dispatchEvent(new CustomEvent(name, { detail }));
+        return this.dispatchEvent(new CustomEvent(name, { detail, cancelable: true }));
     }
 
     onEvent(name, callback) {

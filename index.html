@@ -22,6 +22,12 @@
         header.addEventListener('click-register', function(e) {
             console.log('register clicked');
         });
+        header.addEventListener('click-vertical-games', function(e) {
+            console.log('games clicked');
+        });
+        header.addEventListener('click-join', function(e) {
+            console.log('join clicked');
+        });
         header.addEventListener('submit-search', function(e) {
             console.log('search:', e.detail.query);
         });
@@ -39,7 +45,10 @@
         });
         header.addEventListener('logout-success', function(e) {
             console.log('logout success');
-        })
+        });
+        header.addEventListener('mobile-nav-toggle', function(e) {
+            console.log('mobile nav toggle');
+        });
     });
   </script>
   <style>

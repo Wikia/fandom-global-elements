@@ -40,6 +40,8 @@ export default class FandomGlobalHeaderMobile {
         });
 
         this._initNavDrawer();
+
+        this.parent.onEvent(EVENTS.USER_DATA_REFRESHED, () => this._updateUserState());
     }
 
     isVisible() {
@@ -157,11 +159,11 @@ export default class FandomGlobalHeaderMobile {
         };
 
         container.querySelectorAll('a').forEach((anchor) => {
-            anchor.addEventListener('click', () => {
+            anchor.addEventListener('click', (e) => {
                 const classes = anchor.parentElement.className.split(' ');
                 classes.find((name) => {
                     if (linkMap[name]) {
-                        this.parent.triggerEvent(linkMap[name]);
+                        this.parent.triggerEvent(linkMap[name], { href: anchor.getAttribute('href'), originalEvent: e});
                         return true;
                     }
                 })

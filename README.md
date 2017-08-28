@@ -90,7 +90,9 @@ It also implements a mobile version based on the mobile wiki nav. The mobile ver
 ```
 
 #### Events
-The header emits several events for user actions. These are defined in `events.es6` and exported as `EVENTS.HEADER` by the module-type outputs. For all the link-type click events (on an `a` tag) the `event.detail.originalEvent` is passed to the listener so it's possible to prevent any link redirection. Example:
+The header emits several events for user actions. These are defined in `events.es6` and exported as `EVENTS.HEADER` by the module-type outputs. 
+
+For all the link-type click events (on an `a` tag) the `event.detail.originalEvent` is passed to the listener so it's possible to prevent any link redirection. Example:
 
 ```
 <script>
@@ -106,7 +108,19 @@ document.addEventListener('WebComponentsReady', function() {
 
 would prevent the "Games" link in the header to redirect to the intended page.
 
-Alternatively, you can return `false` from any event handler function and the web component's default behavior will be prevented. 
+For non-link events (i.e. custom events) simply call event.preventDefault() and no further action will be taken. Example: 
+
+```
+<script>
+document.addEventListener('WebComponentsReady', function() {
+    var header = document.querySelector('fandom-global-header');
+    header.addEventListener('mobile-nav-toggle', function(e) {
+        e.preventDefault();
+        console.log('mobile nav toggle was clicked, not opening the mobile nav');
+    });
+})
+</script>
+```
 
 ### Footer
 
