@@ -49,7 +49,7 @@ export default class FandomGlobalHeader extends HTMLElement {
     }
 
     isSearchHidden() {
-        return this.atts.getAsBool(this.atts[ATTRIBUTES.HIDE_SEARCH]);
+        return this.atts.getAsBool(ATTRIBUTES.HIDE_SEARCH);
     }
 
     isVisible() {
