@@ -99,7 +99,7 @@ export default class FandomGlobalHeader extends HTMLElement {
 
         window.addEventListener('resize', throttle(100, () => {
             let newViewportSize = getViewportSize();
-            if (newViewportSize != viewportSize) {
+            if (newViewportSize !== viewportSize) {
                 viewportSize = newViewportSize;
                 this.triggerEvent(EVENTS.BREAKPOINT_CHANGED, {size: newViewportSize});
             }

@@ -124,20 +124,3 @@
 		margin: auto;
 	}
 }
-
-//Styles for BFAA
-.bfaa-template {
-	.site-head-headroom-top {
-		.site-head {
-			position: static;
-		}
-	}
-}
-
-.no-scroll {
-	.bfaa-template {
-		.site-head {
-			position: fixed;
-		}
-	}
-}
