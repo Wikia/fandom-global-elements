@@ -2948,7 +2948,7 @@ var FandomGlobalHeader = function (_HTMLElement) {
         value: function triggerEvent(name) {
             var detail = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-            return this.dispatchEvent(new CustomEvent(name, { detail: detail }));
+            return this.dispatchEvent(new CustomEvent(name, { detail: detail, cancelable: true }));
         }
     }, {
         key: 'onEvent',
@@ -4383,6 +4383,10 @@ var FandomGlobalHeaderMobile = function () {
             });
 
             this._initNavDrawer();
+
+            this.parent.onEvent(_events.EVENTS.USER_DATA_REFRESHED, function () {
+                return _this._updateUserState();
+            });
         }
     }, {
         key: 'isVisible',
@@ -4524,11 +4528,11 @@ var FandomGlobalHeaderMobile = function () {
             };
 
             container.querySelectorAll('a').forEach(function (anchor) {
-                anchor.addEventListener('click', function () {
+                anchor.addEventListener('click', function (e) {
                     var classes = anchor.parentElement.className.split(' ');
                     classes.find(function (name) {
                         if (linkMap[name]) {
-                            _this6.parent.triggerEvent(linkMap[name]);
+                            _this6.parent.triggerEvent(linkMap[name], { href: anchor.getAttribute('href'), originalEvent: e });
                             return true;
                         }
                     });
@@ -4648,7 +4652,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 var Handlebars = __webpack_require__(0);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    return "<div class=\"side-nav-drawer collapsed\">\n  <div class=\"side-nav-drawer__content\">\n    <div class=\"wiki-nav wikia-nav--in-root\">\n      <a class=\"wikia-nav__header\">\n      </a>\n\n      <ul class=\"nav-menu\">\n      </ul>\n    </div>\n  </div>\n</div>\n";
+    return "<div class=\"side-nav-drawer collapsed\">\n  <div class=\"side-nav-drawer__content\">\n    <div class=\"wiki-nav wikia-nav--in-root\">\n      <span class=\"wikia-nav__header\">\n      </span>\n\n      <ul class=\"nav-menu\">\n      </ul>\n    </div>\n  </div>\n</div>\n";
 },"useData":true});
 
 /***/ }),

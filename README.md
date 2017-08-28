@@ -87,7 +87,6 @@ It also implements a mobile version based on the mobile wiki nav. The mobile ver
 - `mw-base` - base MediaWiki URL used to http requests. defaults to `http://www.wikia.com`
 - `services-base` - base services URL used to service http requests. defaults to `https://services.wikia.com`
 - `hide-search` - whether or not to hide the search input. defaults to `false`
-```
 
 #### Events
 The header emits several events for user actions. These are defined in `events.es6` and exported as `EVENTS.HEADER` by the module-type outputs. 
@@ -105,7 +104,6 @@ document.addEventListener('WebComponentsReady', function() {
 })
 </script>
 ```
-
 would prevent the "Games" link in the header to redirect to the intended page.
 
 For non-link events (i.e. custom events) simply call event.preventDefault() and no further action will be taken. Example: 
