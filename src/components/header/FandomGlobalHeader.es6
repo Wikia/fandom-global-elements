@@ -20,15 +20,228 @@ export default class FandomGlobalHeader extends HTMLElement {
 
         this._bindEvents();
 
-        requestNavInfo(this.atts.mwBase, this.atts.langCode)
-            .then((mwData) => {
-                this.mwData = mwData;
-                this.userData = fromNavResponse(mwData);
+        // requestNavInfo(this.atts.mwBase, this.atts.langCode)
+        //     .then((mwData) => {
+        //         this.mwData = mwData;
+        //         this.userData = fromNavResponse(mwData);
+        // 
+        //         this._createDesktopHeader();
+        //         this._createMobileHeader();
+        //         this._draw();
+        //     })
+        const mwData = {
+          "logo": {
+            "header": {
+              "type": "link-image",
+              "href": "http://fandom.servicesmw-s1.wikia-dev.us",
+              "image": "wds-company-logo-fandom-powered-by-wikia",
+              "image-data": {
+                "type": "wds-svg",
+                "name": "wds-company-logo-fandom-powered-by-wikia"
+              },
+              "title": {
+                "type": "text",
+                "value": "Fandom powered by Wikia"
+              },
+              "tracking_label": "logo"
+            },
+            "module": {
+              "type": "logo",
+              "main": {
+                "type": "link-image",
+                "href": "http://fandom.servicesmw-s1.wikia-dev.us",
+                "image": "wds-company-logo-fandom",
+                "image-data": {
+                  "type": "wds-svg",
+                  "name": "wds-company-logo-fandom"
+                },
+                "title": {
+                  "type": "text",
+                  "value": "Fandom powered by Wikia"
+                },
+                "tracking_label": "logo"
+              },
+              "tagline": {
+                "type": "link-image",
+                "href": "http://fandom.servicesmw-s1.wikia-dev.us",
+                "image-data": {
+                  "type": "wds-svg",
+                  "name": "wds-company-logo-powered-by-wikia"
+                },
+                "title": {
+                  "type": "text",
+                  "value": "Fandom powered by Wikia"
+                },
+                "tracking_label": "logo-tagline"
+              }
+            }
+          },
+          "search": {
+            "module": {
+              "type": "search",
+              "results": {
+                "tracking_label": "search",
+                "param-name": "query",
+                "url": "http://muppet.servicesmw-s1.wikia-dev.us/wiki/Special:Search"
+              },
+              "placeholder-inactive": {
+                "type": "translatable-text",
+                "key": "global-navigation-search-placeholder-inactive"
+              },
+              "placeholder-active": {
+                "type": "translatable-text",
+                "key": "global-navigation-search-placeholder-in-wiki",
+                "params": {
+                  "sitename": {
+                    "type": "text",
+                    "value": "Muppet Wiki"
+                  }
+                }
+              },
+              "suggestions": {
+                "url": "http://muppet.servicesmw-s1.wikia-dev.us/index.php?action=ajax&rs=getLinkSuggest&format=json",
+                "param-name": "query",
+                "tracking_label": "search-suggestion"
+              }
+            }
+          },
+          "create_wiki": {
+            "header": {
+              "type": "link-text",
+              "title": {
+                "type": "translatable-text",
+                "key": "global-navigation-create-wiki-link-start-wikia"
+              },
+              "href": "http://www.servicesmw-s1.wikia-dev.us/Special:CreateNewWiki",
+              "tracking_label": "start-a-wiki"
+            }
+          },
+          "fandom_overview": {
+            "links": [
+              {
+                "type": "link-branded",
+                "brand": "games",
+                "title": {
+                  "type": "translatable-text",
+                  "key": "global-navigation-fandom-overview-link-vertical-games"
+                },
+                "href": "http://fandom.servicesmw-s1.wikia-dev.us/topics/games",
+                "tracking_label": "link.games"
+              },
+              {
+                "type": "link-branded",
+                "brand": "movies",
+                "title": {
+                  "type": "translatable-text",
+                  "key": "global-navigation-fandom-overview-link-vertical-movies"
+                },
+                "href": "http://fandom.servicesmw-s1.wikia-dev.us/topics/movies",
+                "tracking_label": "link.movies"
+              },
+              {
+                "type": "link-branded",
+                "brand": "tv",
+                "title": {
+                  "type": "translatable-text",
+                  "key": "global-navigation-fandom-overview-link-vertical-tv"
+                },
+                "href": "http://fandom.servicesmw-s1.wikia-dev.us/topics/tv",
+                "tracking_label": "link.tv"
+              }
+            ]
+          },
+          "wikis": {
+            "header": {
+              "type": "line-text",
+              "title": {
+                "type": "translatable-text",
+                "key": "global-navigation-wikis-header"
+              },
+              "tracking_label": "link.wikis"
+            },
+            "links": [
+              {
+                "type": "link-text",
+                "title": {
+                  "type": "translatable-text",
+                  "key": "global-navigation-wikis-explore"
+                },
+                "href": "http://fandom.servicesmw-s1.wikia-dev.us/explore",
+                "tracking_label": "link.explore"
+              },
+              {
+                "type": "link-text",
+                "title": {
+                  "type": "translatable-text",
+                  "key": "global-navigation-wikis-community-central"
+                },
+                "href": "http://community.servicesmw-s1.wikia-dev.us/wiki/Community_Central",
+                "tracking_label": "link.community-central"
+              },
+              {
+                "type": "link-text",
+                "title": {
+                  "type": "translatable-text",
+                  "key": "global-navigation-wikis-fandom-university"
+                },
+                "href": "http://community.servicesmw-s1.wikia-dev.us/wiki/Fandom_University",
+                "tracking_label": "link.fandom-university"
+              }
+            ]
+          },
+          "anon": {
+            "header": {
+              "type": "line-image",
+              "image": "wds-icons-user",
+              "image-data": {
+                "type": "wds-svg",
+                "name": "wds-icons-user"
+              },
+              "title": {
+                "type": "translatable-text",
+                "key": "global-navigation-anon-my-account"
+              },
+              "subtitle": {
+                "type": "translatable-text",
+                "key": "global-navigation-anon-my-account"
+              },
+              "tracking_label": "account"
+            },
+            "links": [
+              {
+                "type": "link-authentication",
+                "title": {
+                  "type": "translatable-text",
+                  "key": "global-navigation-anon-sign-in"
+                },
+                "href": "http://www.servicesmw-s1.wikia-dev.us/signin",
+                "param-name": "redirect",
+                "tracking_label": "account.sign-in"
+              },
+              {
+                "type": "link-authentication",
+                "title": {
+                  "type": "translatable-text",
+                  "key": "global-navigation-anon-register"
+                },
+                "subtitle": {
+                  "type": "translatable-text",
+                  "key": "global-navigation-anon-register-description"
+                },
+                "href": "http://www.servicesmw-s1.wikia-dev.us/register",
+                "param-name": "redirect",
+                "tracking_label": "account.register"
+              }
+            ]
+          }
+        };
+        
+        this.mwData = mwData;
+        this.userData = fromNavResponse(mwData);
 
-                this._createDesktopHeader();
-                this._createMobileHeader();
-                this._draw();
-            })
+        this._createDesktopHeader();
+        this._createMobileHeader();
+        this._draw();
     }
 
     triggerEvent(name, detail = {}) {
