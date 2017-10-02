@@ -61,6 +61,8 @@ To make a release build, run:
 > yarn release
 ```
 
+Once you've built the code, bump the version number in package.json (following [semver](http://semver.org/)) and [create a new release on github](https://help.github.com/articles/creating-releases/). 
+
 ### Outputs
 Local dev builds built with `yarn dev` are placed into `build/dev/fandom-elements.js`. This is gitignore'd. 
 
