@@ -5016,7 +5016,7 @@ function license(model, communityName, vertical) {
     var siteName = escapeHtml(communityName === null ? model.params.sitename.value : communityName);
     var verticalName = escapeHtml(vertical === null ? this.i18n[model.params.vertical.key] : vertical);
 
-    return this.i18n[model.key].replace('__sitename__', siteName).replace('__vertical__', verticalName).replace('__license__', licenseLink(model));
+    return this.i18n[model.key].replace('{sitename}', siteName).replace('{vertical}', verticalName).replace('{license}', licenseLink(model));
 }
 
 /***/ }),
