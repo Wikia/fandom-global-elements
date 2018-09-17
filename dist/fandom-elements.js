@@ -1553,36 +1553,44 @@ return /******/ (function(modules) { // webpackBootstrap
 var Handlebars = __webpack_require__(0);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
+
+  return "        <h3 class=\"wds-global-footer__section-header\">\n"
+    + ((stack1 = helpers["if"].call(alias1,__default(__webpack_require__(12)).call(alias1,"fandom-overview",(depth0 != null ? depth0.name : depth0),{"name":"equal","hash":{},"data":data}),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.program(4, data, 0),"data":data})) != null ? stack1 : "")
+    + "        </h3>\n";
+},"2":function(container,depth0,helpers,partials,data) {
+    return "                Explore\n";
+},"4":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return "        <h3 class=\"wds-global-footer__section-header\">"
+  return "                "
     + container.escapeExpression(__default(__webpack_require__(6)).call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = ((stack1 = ((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.header : stack1)) != null ? stack1.title : stack1)) != null ? stack1.key : stack1),{"name":"i18n","hash":{"ns":"design-system"},"data":data}))
-    + "</h3>\n";
-},"3":function(container,depth0,helpers,partials,data) {
+    + "\n";
+},"6":function(container,depth0,helpers,partials,data) {
     var stack1;
 
   return "        <span class=\"wds-global-footer__section-description\">"
     + container.escapeExpression(__default(__webpack_require__(6)).call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = ((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.description : stack1)) != null ? stack1.key : stack1),{"name":"i18n","hash":{"ns":"design-system"},"data":data}))
     + "</span>\n";
-},"5":function(container,depth0,helpers,partials,data,blockParams,depths) {
-    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
-
-  return "            <li class=\"wds-global-footer__links-list-item\">\n"
-    + ((stack1 = helpers["if"].call(alias1,__default(__webpack_require__(16)).call(alias1,"link-image",((stack1 = blockParams[0][0]) != null ? stack1.type : stack1),{"name":"equal","hash":{},"data":data,"blockParams":blockParams}),{"name":"if","hash":{},"fn":container.program(6, data, 0, blockParams, depths),"inverse":container.program(8, data, 0, blockParams, depths),"data":data,"blockParams":blockParams})) != null ? stack1 : "")
-    + "            </li>\n";
-},"6":function(container,depth0,helpers,partials,data,blockParams) {
-    var stack1;
-
-  return ((stack1 = container.invokePartial(__webpack_require__(52),depth0,{"name":"global-footer-link-image","hash":{"model":blockParams[1][0]},"data":data,"blockParams":blockParams,"indent":"                    ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
 },"8":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
-  return ((stack1 = helpers["if"].call(alias1,__default(__webpack_require__(16)).call(alias1,"link-branded",((stack1 = blockParams[1][0]) != null ? stack1.type : stack1),{"name":"equal","hash":{},"data":data,"blockParams":blockParams}),{"name":"if","hash":{},"fn":container.program(9, data, 0, blockParams, depths),"inverse":container.program(11, data, 0, blockParams, depths),"data":data,"blockParams":blockParams})) != null ? stack1 : "");
-},"9":function(container,depth0,helpers,partials,data,blockParams,depths) {
+  return "            <li class=\"wds-global-footer__links-list-item\">\n"
+    + ((stack1 = helpers["if"].call(alias1,__default(__webpack_require__(12)).call(alias1,"link-image",((stack1 = blockParams[0][0]) != null ? stack1.type : stack1),{"name":"equal","hash":{},"data":data,"blockParams":blockParams}),{"name":"if","hash":{},"fn":container.program(9, data, 0, blockParams, depths),"inverse":container.program(11, data, 0, blockParams, depths),"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+    + "            </li>\n";
+},"9":function(container,depth0,helpers,partials,data,blockParams) {
+    var stack1;
+
+  return ((stack1 = container.invokePartial(__webpack_require__(52),depth0,{"name":"global-footer-link-image","hash":{"model":blockParams[1][0]},"data":data,"blockParams":blockParams,"indent":"                    ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
+},"11":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
+
+  return ((stack1 = helpers["if"].call(alias1,__default(__webpack_require__(12)).call(alias1,"link-branded",((stack1 = blockParams[1][0]) != null ? stack1.type : stack1),{"name":"equal","hash":{},"data":data,"blockParams":blockParams}),{"name":"if","hash":{},"fn":container.program(12, data, 0, blockParams, depths),"inverse":container.program(14, data, 0, blockParams, depths),"data":data,"blockParams":blockParams})) != null ? stack1 : "");
+},"12":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1;
 
   return ((stack1 = container.invokePartial(__webpack_require__(53),depths[1],{"name":"global-footer-link-branded","hash":{"model":blockParams[2][0]},"data":data,"blockParams":blockParams,"indent":"                    ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "");
-},"11":function(container,depth0,helpers,partials,data,blockParams,depths) {
+},"14":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1;
 
   return ((stack1 = container.invokePartial(__webpack_require__(54),depths[1],{"name":"global-footer-link-text","hash":{"model":blockParams[2][0]},"data":data,"blockParams":blockParams,"indent":"                    ","helpers":helpers,"partials":partials,"decorators":container.decorators})) != null ? stack1 : "")
@@ -1597,10 +1605,10 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + "\">\n"
     + ((stack1 = helpers["if"].call(alias3,((stack1 = ((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.header : stack1)) != null ? stack1.title : stack1),{"name":"if","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
     + "\n"
-    + ((stack1 = helpers["if"].call(alias3,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.description : stack1),{"name":"if","hash":{},"fn":container.program(3, data, 0, blockParams, depths),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias3,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.description : stack1),{"name":"if","hash":{},"fn":container.program(6, data, 0, blockParams, depths),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
     + "\n    <ul class=\"wds-global-footer__links-list\">\n"
-    + ((stack1 = helpers.each.call(alias3,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.links : stack1),{"name":"each","hash":{},"fn":container.program(5, data, 1, blockParams, depths),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
-    + "    </ul>\n</section>";
+    + ((stack1 = helpers.each.call(alias3,((stack1 = (depth0 != null ? depth0.model : depth0)) != null ? stack1.links : stack1),{"name":"each","hash":{},"fn":container.program(8, data, 1, blockParams, depths),"inverse":container.noop,"data":data,"blockParams":blockParams})) != null ? stack1 : "")
+    + "    </ul>\n</section>\n";
 },"usePartial":true,"useData":true,"useDepths":true,"useBlockParams":true});
 
 /***/ }),
@@ -2605,6 +2613,21 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.default = equal;
+function equal(a, b) {
+    return a === b;
+}
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 exports.fromNavResponse = fromNavResponse;
 exports.validateUserData = validateUserData;
 exports.getProfileLink = getProfileLink;
@@ -2644,7 +2667,7 @@ function getProfileLink() {
 }
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2758,7 +2781,7 @@ var AttributeHelper = function () {
 exports.default = AttributeHelper;
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2783,7 +2806,7 @@ function getOrCreateTemplate(id, content) {
 }
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(5)(undefined);
@@ -2795,21 +2818,6 @@ exports.push([module.i, ".wds-avatar{height:28px;min-width:28px;width:28px;borde
 
 // exports
 
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.default = equal;
-function equal(a, b) {
-    return a === b;
-}
 
 /***/ }),
 /* 17 */
@@ -2877,7 +2885,7 @@ var _FandomGlobalHeaderMobile = __webpack_require__(42);
 
 var _FandomGlobalHeaderMobile2 = _interopRequireDefault(_FandomGlobalHeaderMobile);
 
-var _AttributeHelper = __webpack_require__(13);
+var _AttributeHelper = __webpack_require__(14);
 
 var _AttributeHelper2 = _interopRequireDefault(_AttributeHelper);
 
@@ -2885,11 +2893,11 @@ var _events = __webpack_require__(3);
 
 var _breakpoints = __webpack_require__(4);
 
-var _userData = __webpack_require__(12);
+var _userData = __webpack_require__(13);
 
 var _services = __webpack_require__(10);
 
-var _getOrCreateTemplate = __webpack_require__(14);
+var _getOrCreateTemplate = __webpack_require__(15);
 
 var _getOrCreateTemplate2 = _interopRequireDefault(_getOrCreateTemplate);
 
@@ -2901,7 +2909,7 @@ var _stylesDesktop = __webpack_require__(49);
 
 var _stylesDesktop2 = _interopRequireDefault(_stylesDesktop);
 
-var _styles = __webpack_require__(15);
+var _styles = __webpack_require__(16);
 
 var _styles2 = _interopRequireDefault(_styles);
 
@@ -4328,7 +4336,7 @@ var _SvgHelper = __webpack_require__(8);
 
 var _SvgHelper2 = _interopRequireDefault(_SvgHelper);
 
-var _userData = __webpack_require__(12);
+var _userData = __webpack_require__(13);
 
 var _getStrings = __webpack_require__(9);
 
@@ -4776,7 +4784,7 @@ var _getStrings = __webpack_require__(9);
 
 var _getStrings2 = _interopRequireDefault(_getStrings);
 
-var _getOrCreateTemplate = __webpack_require__(14);
+var _getOrCreateTemplate = __webpack_require__(15);
 
 var _getOrCreateTemplate2 = _interopRequireDefault(_getOrCreateTemplate);
 
@@ -4784,7 +4792,7 @@ var _footer = __webpack_require__(51);
 
 var _footer2 = _interopRequireDefault(_footer);
 
-var _AttributeHelper = __webpack_require__(13);
+var _AttributeHelper = __webpack_require__(14);
 
 var _AttributeHelper2 = _interopRequireDefault(_AttributeHelper);
 
@@ -4796,7 +4804,7 @@ var _style = __webpack_require__(57);
 
 var _style2 = _interopRequireDefault(_style);
 
-var _styles = __webpack_require__(15);
+var _styles = __webpack_require__(16);
 
 var _styles2 = _interopRequireDefault(_styles);
 
