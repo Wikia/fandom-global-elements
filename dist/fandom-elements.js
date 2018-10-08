@@ -2582,7 +2582,7 @@ function request(url, options) {
 }
 
 function requestNavInfo(baseUrl, lang) {
-    return request(baseUrl + '/api/v1/design-system/fandoms/2/' + lang + '/global-navigation').then(function (response) {
+    return request(baseUrl + '/api/v1/DesignSystem/Navigation?product=fandoms&id=2&lang=' + lang).then(function (response) {
         return response.json();
     });
 }
@@ -4838,7 +4838,7 @@ var FandomGlobalFooter = function (_HTMLElement) {
             this.svgs = new _SvgHelper2.default(this.rootElement);
             this.strings = (0, _getStrings2.default)(this.atts.langCode);
 
-            fetch(this.atts.mwBase + '/api/v1/design-system/wikis/' + this.atts.cityId + '/' + this.atts.langCode + '/global-footer', { credentials: 'include' }).then(function (response) {
+            fetch(this.atts.mwBase + '/api/v1/DesignSystem/Footer?product=wikis&id=' + this.atts.cityId + '&lang=' + this.atts.langCode, { credentials: 'include' }).then(function (response) {
                 return response.json();
             }).then(function (footer) {
                 return _this2._draw(footer);

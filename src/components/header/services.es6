@@ -5,6 +5,6 @@ export function request(url, options) {
 }
 
 export function requestNavInfo(baseUrl, lang) {
-    return request(`${baseUrl}/api/v1/design-system/fandoms/2/${lang}/global-navigation`)
+    return request(`${baseUrl}/api/v1/DesignSystem/Navigation?product=fandoms&id=2&lang=${lang}`)
         .then(response => response.json());
 }

@@ -16,7 +16,8 @@ export default class FandomGlobalFooter extends HTMLElement {
         this.svgs = new SvgHelper(this.rootElement);
         this.strings = getStrings(this.atts.langCode);
 
-        fetch(`${this.atts.mwBase}/api/v1/design-system/wikis/${this.atts.cityId}/${this.atts.langCode}/global-footer`, { credentials: 'include' })
+
+        fetch(`${this.atts.mwBase}/api/v1/DesignSystem/Footer?product=wikis&id=${this.atts.cityId}&lang=${this.atts.langCode}`, { credentials: 'include' })
             .then((response) => response.json())
             .then((footer) => this._draw(footer))
             .catch((error) => console.log('error fetching footer ', error));
